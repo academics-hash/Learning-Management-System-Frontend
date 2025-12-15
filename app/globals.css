@@ -1,26 +1,50 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #030014;
+  --foreground: #ffffff;
+  --primary-pink: #DC5178;
+  --footer-bg: #1A0B10;
+  --footer-overlay: #D7528733;
+  --font-switzer: 'Switzer', sans-serif;
 }
+
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary-pink: var(--primary-pink);
+  --color-footer-bg: var(--footer-bg);
+  --color-footer-overlay: var(--footer-overlay);
+  
+  --font-montserrat: var(--font-montserrat);
+  --font-lexend: var(--font-lexend);
+  --font-inter: var(--font-inter);
+  --font-switzer: var(--font-switzer);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+
 
 body {
-  background: var(--background);
+  background-color: #000000; /* Pure black fallback */
+  background-image: 
+    url('/image/bg.png'),
+    /* Vignette effect - darkens all edges */
+    radial-gradient(ellipse at 50% 50%, transparent 25%, rgba(0, 0, 0, 0.7) 65%, #000000 100%),
+    /* Top edge darkening */
+    linear-gradient(to bottom, #000000 0%, transparent 20%),
+    /* Bottom edge darkening */
+    linear-gradient(to top, #000000 0%, transparent 20%),
+    /* Left edge darkening */
+    linear-gradient(to right, #000000 0%, transparent 15%),
+    /* Right edge darkening */
+    linear-gradient(to left, #000000 0%, transparent 15%);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
