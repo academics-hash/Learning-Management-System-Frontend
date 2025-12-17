@@ -2,15 +2,15 @@ import React from 'react'
 import Achievement from './compoents/Achievement'
 import Hero from './compoents/Hero'
 import Content from './compoents/Content'
-import CourseSection from './compoents/CourseSection'
+import CourseSelection from './compoents/CourseSelection'
 const page = () => {
   return (
     <div>
       <Hero />
-      <CourseSection />
+      <CourseSelection />
       <Content />
       <Achievement />
-      
+
     </div>
   )
 }
