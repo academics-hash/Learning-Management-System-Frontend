@@ -1,18 +1,78 @@
-import React from 'react'
+"use client";
+import React, { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { FaLaptopCode, FaBookOpen } from 'react-icons/fa'
 import { LuHeartHandshake } from "react-icons/lu";
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(useGSAP);
 
 const Hero = () => {
+    const contentRef = useRef(null);
+    const cubeRef = useRef(null);
+
+    useGSAP(() => {
+        const tl = gsap.timeline();
+
+        tl.from(contentRef.current.children, {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: "power3.out",
+            delay: 0.2,
+            onComplete: () => {
+                if (cubeRef.current) {
+                    const loopTl = gsap.timeline({ repeat: -1 });
+                    loopTl.to(cubeRef.current, { rotationX: -90, duration: 1.5, ease: "elastic.out(1, 0.75)", delay: 2 })
+                        .to(cubeRef.current, { rotationX: -180, duration: 1.5, ease: "elastic.out(1, 0.75)", delay: 2 })
+                        .to(cubeRef.current, { rotationX: -270, duration: 1.5, ease: "elastic.out(1, 0.75)", delay: 2 })
+                        .to(cubeRef.current, { rotationX: -360, duration: 1.5, ease: "elastic.out(1, 0.75)", delay: 2 })
+                        .set(cubeRef.current, { rotationX: 0 });
+                }
+            }
+        });
+    }, { scope: contentRef });
+
     return (
         <section className="relative w-full pt-16 pb-32 px-6 z-20">
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
                 {/* Left Content */}
-                <div className="w-full lg:w-1/2 space-y-8 mt-32">
+                <div ref={contentRef} className="w-full lg:w-1/2 space-y-8 mt-32 opacity-100">
                     <h6 className="text-[40.72px] font-medium leading-[120%] tracking-[-0.02em] text-white capitalize font-montserrat max-w-[638px]">
-                        Elevate Your Skills Online With Our Free Course
+                        Elevate Your Skills Online With Our{' '}
+                        <span className="inline-grid h-[1.2em] grid-cols-1 grid-rows-1 align-bottom [perspective:300px] ml-4">
+                            {/* Spacer to hold width of longest text */}
+                            <span className="col-start-1 text-[40.72px] row-start-1 opacity-0 pointer-events-none whitespace-pre font-medium">
+                                Expert Guidance
+                            </span>
+
+                            {/* Rotating Cube */}
+                            <span
+                                ref={cubeRef}
+                                className="col-start-1 row-start-1 relative [transform-style:preserve-3d]"
+                            >
+                                {/* Face 1: Free Course (Front) */}
+                                <span className=" text-[40.72px] absolute inset-0 flex items-center justify-start [backface-visibility:hidden] [transform:translateZ(0.6em)] gap-2">
+                                    Free Course
+                                </span>
+                                {/* Face 2: Expert Guidance (Top) */}
+                                <span className="text-[40.72px] absolute inset-0 flex items-center justify-start text-[#D75287] [backface-visibility:hidden] [transform:rotateX(90deg)_translateZ(0.6em)]">
+                                    Expert Guidance
+                                </span>
+                                {/* Face 3: Free Course (Back) */}
+                                <span className="text-[40.72px] absolute inset-0 flex items-center justify-start [backface-visibility:hidden] [transform:rotateX(180deg)_translateZ(0.6em)]">
+                                    Free Course
+                                </span>
+                                {/* Face 4: Expert Guidance (Bottom) */}
+                                <span className="text-[40.72px] absolute inset-0 flex items-center justify-start text-[#D75287] [backface-visibility:hidden] [transform:rotateX(270deg)_translateZ(0.6em)]">
+                                    Expert Guidance
+                                </span>
+                            </span>
+                        </span>
                     </h6>
 
                     <div className="flex flex-wrap gap-4">
@@ -34,12 +94,22 @@ const Hero = () => {
                         We denounce with righteous indignation and dislike men who are so beguiled and demoralized that cannot trouble.
                     </p>
 
-                    <Link
-                        href="/course"
-                        className="flex items-center justify-center w-[129px] h-[44px] bg-[#D75287] hover:bg-[#c74772] text-white gap-[6px] rounded-[80px] px-[20px] py-[16px] transition-all shadow-[0_0_20px_rgba(215,82,135,0.4)] hover:shadow-[0_0_30px_rgba(215,82,135,0.6)] text-[16px] font-medium font-inter leading-[100%] tracking-[0%]"
-                    >
-                        Get Started
-                    </Link>
+                    <div>
+                        {/* Wrapped Link in div because functional components like Link sometimes have issues with direct ref attachment or animation if they don't forward refs properly, though GSAP usually handles it via DOM selection. However, Link IS a component, so wrapping it ensures the div is what's animated. Actually, contentRef.current.children will pick up the Link's output anchor tag if it renders one, or the Link component itself. Next.js Link renders an anchor tag by default in newer versions. But to be safe and consistent with "children" selector, wrapping in a div or just letting it be is fine. 
+                         Wait, Link in Next.js 13+ (which this likely is given "app" dir) renders an <a> tag. 
+                         But wait, I am animating `contentRef.current.children`. 
+                         The children are `h6`, `div`, `p`, `Link`.
+                         If `Link` is a React component, `contentRef.current.children` gets the DOM nodes. 
+                         Next.js Link renders an `<a>`. So it should be fine. 
+                         However, `Link` component might not hold the style/className perfectly if animated externally sometimes? No, `from` animates the DOM element. The `Link` produces an `<a>` tag in the DOM. So `children[3]` will be that `<a>`. It should work.
+                         */}
+                        <Link
+                            href="/course"
+                            className="flex items-center justify-center w-[129px] h-[44px] bg-[#D75287] hover:bg-[#c74772] text-white gap-[6px] rounded-[80px] px-[20px] py-[16px] transition-all shadow-[0_0_20px_rgba(215,82,135,0.4)] hover:shadow-[0_0_30px_rgba(215,82,135,0.6)] text-[16px] font-medium font-inter leading-[100%] tracking-[0%]"
+                        >
+                            Get Started
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Right Images - Grid with DEEP Overlap */}
