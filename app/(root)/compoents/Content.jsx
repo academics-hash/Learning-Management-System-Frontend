@@ -37,7 +37,7 @@ const Content = () => {
 
     return (
         <section className="relative w-full py-20 px-6 overflow-hidden -mt-40">
-            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-10">
+            <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-10">
 
                 {/* Left Content */}
                 <div className="w-full lg:w-[45%] flex flex-col gap-8 z-10">
@@ -45,7 +45,7 @@ const Content = () => {
                         <span className="block w-[186px] h-[19px]  font-['Exo'] font-semibold text-[16px] leading-[120%] tracking-[0%] capitalize">
                             Get More Power From
                         </span>
-                        <h2 className="w-full max-w-[462px] text-white font-['Lexend_Deca'] font-medium text-[40px] leading-[140%] tracking-[0%] capitalize">
+                        <h2 className="w-full max-w-[462px] text-white font-['Lexend_Deca'] font-medium text-[32px] md:text-[40px] leading-[140%] tracking-[0%] capitalize">
                             Boost Your Skills With <br className="hidden md:block" /> Add-On Courses
                         </h2>
                         <p className="w-full max-w-[450px] text-gray-300 font-['Jost'] font-normal text-[18px] leading-[150%] tracking-[0%]">
@@ -68,28 +68,28 @@ const Content = () => {
 
                         {/* Back Layer */}
                         {/* Back Layer */}
-                        <div className="pop-card absolute top-[10%] left-[10%] w-[366.86px] h-[186.54px] transform -rotate-12 z-0 opacity-80">
+                        <div className="pop-card absolute top-[10%] left-[10%] w-[260px] md:w-[366.86px] h-[132px] md:h-[186.54px] transform -rotate-12 z-0 opacity-80">
                             <Image src="/image/skill-1.png" alt="Skill 1" fill className="object-cover rounded-[24.45px] shadow-2xl" />
                         </div>
-                        <div className="pop-card absolute bottom-[20%] right-[5%] w-[366.86px] h-[186.54px] transform rotate-6 z-10">
+                        <div className="pop-card absolute bottom-[20%] right-[5%] w-[260px] md:w-[366.86px] h-[132px] md:h-[186.54px] transform rotate-6 z-10">
                             <Image src="/image/skill-2.png" alt="Skill 2" fill className="object-cover rounded-[24.45px] shadow-2xl" />
                         </div>
 
                         {/* Middle Layer */}
-                        <div className="pop-card absolute top-[5%] right-[15%] w-[366.86px] h-[186.54px] transform rotate-12 z-10">
+                        <div className="pop-card absolute top-[5%] right-[15%] w-[260px] md:w-[366.86px] h-[132px] md:h-[186.54px] transform rotate-12 z-10">
                             <Image src="/image/skill-3.png" alt="Skill 3" fill className="object-cover rounded-[24.45px] shadow-2xl" />
                         </div>
-                        <div className="pop-card absolute bottom-[10%] left-[20%] w-[366.86px] h-[186.54px] transform -rotate-6 z-10">
+                        <div className="pop-card absolute bottom-[10%] left-[20%] w-[260px] md:w-[366.86px] h-[132px] md:h-[186.54px] transform -rotate-6 z-10">
                             <Image src="/image/skill-4.png" alt="Skill 4" fill className="object-cover rounded-[24.45px] shadow-2xl" />
                         </div>
 
                         {/* Front Layer - Main Focus */}
-                        <div className="pop-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[366.86px] h-[186.54px] transform z-20 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                        <div className="pop-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] md:w-[366.86px] h-[132px] md:h-[186.54px] transform z-20 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
                             <Image src="/image/skill-5.png" alt="Skill Main" fill className="object-cover rounded-[24.45px] shadow-2xl" />
                         </div>
 
                         {/* Floating Small Element */}
-                        <div className="pop-card absolute top-[20%] left-[40%] w-[366.86px] h-[186.54px] transform -rotate-12 translate-y-[-50px] z-20">
+                        <div className="pop-card absolute top-[20%] left-[40%] w-[260px] md:w-[366.86px] h-[132px] md:h-[186.54px] transform -rotate-12 translate-y-[-50px] z-20">
                             <Image src="/image/skill-6.png" alt="Skill 6" fill className="object-cover rounded-[24.45px] shadow-2xl" />
                         </div>
 
