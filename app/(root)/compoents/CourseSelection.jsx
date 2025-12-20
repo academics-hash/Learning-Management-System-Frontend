@@ -3,54 +3,15 @@ import React from 'react'
 import CourseCard from './CourseCard'
 import Link from 'next/link'
 
-const courses = [
-    {
-        id: 1,
-        title: "Beginner's Guide to becoming a JavaScript Developer",
-        category: "JavaScript Basics",
-        image: "/image/cardimage.png",
-        authorName: "Determined-Poitras",
-        authorAvatar: "/image/hero-2.png",
-        duration: "2Weeks",
-        students: "156",
-        price: "29.0"
-    },
-    {
-        id: 2,
-        title: "Mastering React.js from Scratch",
-        category: "React Development",
-        image: "/image/cardimage.png",
-        authorName: "Determined-Poitras",
-        authorAvatar: "/image/hero-1.png",
-        duration: "4Weeks",
-        students: "230",
-        price: "49.0"
-    },
-    {
-        id: 3,
-        title: "CSS Grid and Flexbox for Beginners",
-        category: "Web Design",
-        image: "/image/cardimage.png",
-        authorName: "Determined-Poitras",
-        authorAvatar: "/image/hero-1.png",
-        duration: "1Week",
-        students: "98",
-        price: "19.0"
-    },
-    {
-        id: 4,
-        title: "CSS Grid and Flexbox for Beginners",
-        category: "Web Design",
-        image: "/image/cardimage.png",
-        authorName: "Determined-Poitras",
-        authorAvatar: "/image/hero-1.png",
-        duration: "1Week",
-        students: "98",
-        price: "19.0"
-    }
-]
+import { useGetPublishedCoursesQuery } from '@/feature/api/courseApi';
 
 const CourseSelection = () => {
+    const { data, isLoading, error } = useGetPublishedCoursesQuery();
+
+    if (isLoading) return <div>Loading...</div>; // Or a nice skeleton
+    if (error) return <div>Error loading courses</div>;
+
+    const courses = data?.courses || [];
     return (
         <section className="w-full flex justify-center px-4 md:px-0 mt-24 md:mt-32 lg:mt-8 mb-16">
             <div className="w-full max-w-[1784px] min-h-[500px] h-auto bg-[#FFFFFF] rounded-[40px] relative z-10 p-6 md:p-14 flex flex-col justify-center">

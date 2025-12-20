@@ -1,5 +1,7 @@
 import { Montserrat, Lexend_Deca, Inter, Jost } from "next/font/google";
 import "./globals.css";
+import StoreProvider from "./StoreProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -32,7 +34,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${montserrat.variable} ${lexend.variable} ${inter.variable} ${jost.variable} antialiased`}
       >
-        {children}
+        <StoreProvider>
+          {children}
+          <Toaster />
+        </StoreProvider>
       </body>
     </html>
   );

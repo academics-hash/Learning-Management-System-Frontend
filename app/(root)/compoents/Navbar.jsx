@@ -1,9 +1,49 @@
-import React from 'react'
+"use client";
+import React, { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import MobileNav from './MobileNav'
+import { useSelector, useDispatch } from 'react-redux'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useLogoutUserMutation } from '@/feature/api/authApi';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { LayoutDashboard, User, LogOut, Settings } from 'lucide-react';
 
 const Navbar = () => {
+    const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    const dropdownRef = useRef(null);
+    const [logoutUser, { isLoading }] = useLogoutUserMutation();
+    const router = useRouter();
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            await logoutUser().unwrap();
+            toast.success("Logged out successfully");
+            setIsDropdownOpen(false);
+            router.push('/');
+        } catch (error) {
+            toast.error("Logout failed");
+        }
+    };
+
     return (
         <nav className="flex items-center w-full relative mt-5">
             {/* Logo */}
@@ -15,7 +55,6 @@ const Navbar = () => {
                     height={39}
                     className="object-contain"
                 /> </Link>
-
             </div>
 
             {/* Desktop Navigation */}
@@ -34,25 +73,84 @@ const Navbar = () => {
                 </Link>
             </div>
 
-            {/* Desktop Connect Button */}
-            <div className="ml-auto hidden md:block">
-                <Link
-                    href="/contact"
-                    className="
-      flex items-center justify-center gap-[6px]
-      w-[126px] h-[44px]
-      bg-[#D75287] hover:bg-[#c74772]
-      text-white
-      px-[20px] py-[16px]
-      rounded-[80px]
-      font-medium
-      transition-all
-      shadow-[0_0_15px_rgba(215,82,135,0.4)]
-    "
-                    style={{ fontFamily: 'Switzer, sans-serif' }}
-                >
-                    Contact Us
-                </Link>
+            {/* Desktop Connect Button or Avatar Dropdown */}
+            <div className="ml-auto hidden md:block relative" ref={dropdownRef}>
+                {!mounted || loading ? (
+                    <div className="w-[126px] h-[44px]"></div>
+                ) : isAuthenticated ? (
+                    <>
+                        <button
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                            className="focus:outline-none"
+                        >
+                            <Avatar className="w-[44px] h-[44px] border border-white/10 hover:border-[#D75287] transition-all cursor-pointer">
+                                <AvatarImage src={user?.avatar} />
+                                <AvatarFallback className="bg-[#1a191f] text-[#D75287] font-bold font-lexend text-lg">
+                                    {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                                </AvatarFallback>
+                            </Avatar>
+                        </button>
+
+                        {/* Dropdown Menu */}
+                        {isDropdownOpen && (
+                            <div className="absolute right-0 mt-3 w-56 bg-[#1a191f] border border-white/10 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] z-100 overflow-hidden backdrop-blur-md">
+                                <div className="px-4 py-3 border-b border-white/5">
+                                    <p className="text-sm text-gray-400 font-jost">Signed in as</p>
+                                    <p className="text-white font-medium truncate font-lexend">{user?.name || 'User'}</p>
+                                </div>
+
+                                <div className="p-2">
+                                    <Link
+                                        href={user?.role === 'admin' || user?.role === 'superadmin' ? '/admin' : '/dashboard'}
+                                        onClick={() => setIsDropdownOpen(false)}
+                                        className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all text-sm font-jost"
+                                    >
+                                        <LayoutDashboard size={16} className="text-[#D75287]" />
+                                        {user?.role === 'admin' || user?.role === 'superadmin' ? 'Admin Panel' : 'My Dashboard'}
+                                    </Link>
+
+                                    <Link
+                                        href="/profile"
+                                        onClick={() => setIsDropdownOpen(false)}
+                                        className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all text-sm font-jost"
+                                    >
+                                        <User size={16} className="text-[#D75287]" />
+                                        Profile Settings
+                                    </Link>
+                                </div>
+
+                                <div className="p-2 border-t border-white/5">
+                                    <button
+                                        onClick={handleLogout}
+                                        disabled={isLoading}
+                                        className="w-full flex items-center gap-3 px-3 py-2 text-red-400 hover:text-red-300 hover:bg-red-400/5 rounded-lg transition-all text-sm font-jost disabled:opacity-50"
+                                    >
+                                        <LogOut size={16} />
+                                        {isLoading ? 'Logging out...' : 'Sign Out'}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <Link
+                        href="/contact"
+                        className="
+              flex items-center justify-center gap-[6px]
+              w-[126px] h-[44px]
+              bg-[#D75287] hover:bg-[#c74772]
+              text-white
+              px-[20px] py-[16px]
+              rounded-[80px]
+              font-medium
+              transition-all
+              shadow-[0_0_15px_rgba(215,82,135,0.4)]
+            "
+                        style={{ fontFamily: 'Switzer, sans-serif' }}
+                    >
+                        Contact Us
+                    </Link>
+                )}
             </div>
 
 

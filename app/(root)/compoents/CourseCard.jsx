@@ -11,19 +11,16 @@ const CourseCard = ({ course }) => {
         <div className="group flex flex-col bg-[#F9F9F9] rounded-[24px] overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 p-4 border border-transparent hover:border-gray-200/50">
 
             {/* Image Container */}
-            <div className="relative w-full aspect-4/3 rounded-[20px] overflow-hidden mb-4">
-                {/* Helper for Next.js Image to handle external/internal src properly */}
+            <div className="relative w-full aspect-4/3 rounded-[20px] overflow-hidden mb-4 bg-gray-100">
                 <Image
-                    src={course.image}
-                    alt={course.title}
+                    src={course.course_thumbnail || "/image/placeholder.png"}
+                    alt={course.course_title}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
 
-                {/* Overlay Gradient (Optional for text readability if needed, but here text is below) */}
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300" />
 
-                {/* Like Button */}
                 <button
                     onClick={(e) => {
                         e.preventDefault();
@@ -47,55 +44,64 @@ const CourseCard = ({ course }) => {
 
                 {/* Title */}
                 <h3 className="text-[18.34px] font-medium leading-[23.17px] tracking-[-0.02em] text-[#1A0B10] font-montserrat line-clamp-2 w-full">
-                    {course.title}
+                    {course.course_title}
                 </h3>
 
                 {/* Progress Bar Decoration */}
                 <div className="w-full h-[3px] bg-gray-200 rounded-full mt-1 mb-2 overflow-hidden">
                     <div className="h-full bg-[#DC5178] w-[40%] rounded-full relative">
-                        {/* Glow effect */}
                         <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/50 blur-[2px]" />
                     </div>
                 </div>
 
                 {/* Author */}
                 <div className="flex items-center gap-3">
-                    <div className="relative w-9 h-9 rounded-full overflow-hidden border border-gray-200">
+                    <div className="relative w-9 h-9 rounded-full overflow-hidden border border-gray-200 bg-white">
                         <Image
-                            src={course.authorAvatar}
-                            alt={course.authorName}
+                            src="/image/logo.png"
+                            alt="Stackup"
                             fill
-                            className="object-cover"
+                            className="object-contain p-1"
                         />
                     </div>
-                    <span className="text-[13.63px] leading-[100%] tracking-[-0.02em] font-medium font-montserrat text-gray-600 capitalize">By {course.authorName}</span>
+                    <span className="text-[13.63px] leading-[100%] tracking-[-0.02em] font-medium font-montserrat text-gray-600 capitalize">
+                        By Stackup
+                    </span>
                 </div>
-
-                {/* Divider */}
-                {/* <div className="h-px bg-gray-200/60 my-1" /> */}
 
                 {/* Stats */}
                 <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center gap-1.5">
                         <FaClock className="text-[#DC5178]" />
-                        <span className="text-[13.63px] font-medium font-montserrat leading-[100%] tracking-[0%] capitalize text-[#20202099] w-[54px] h-[17px] flex items-center">{course.duration}</span>
+                        <span className="text-[13.63px] font-medium font-montserrat leading-[100%] tracking-[0%] capitalize text-[#20202099] w-[54px] h-[17px] flex items-center">
+                            22h 30m
+                        </span>
                     </div>
-                    {/* <div className="w-px h-3 bg-gray-300" /> */}
                     <div className="flex items-center gap-1.5">
                         <FaUserGraduate className="text-[#DC5178]" />
-                        <span className="text-[13.63px] font-medium font-montserrat leading-[100%] tracking-[0%] capitalize text-[#20202099] h-[17px] flex items-center">{course.students} Students</span>
+                        <span className="text-[13.63px] font-medium font-montserrat leading-[100%] tracking-[0%] capitalize text-[#20202099] h-[17px] flex items-center">
+                            {course.enrolledStudents?.length || 0} Students
+                        </span>
                     </div>
                 </div>
 
                 {/* Footer: Price & Action */}
                 <div className="flex items-end justify-between mt-auto pt-2">
                     <div className="flex items-center gap-3">
-                        <span className="text-[#908D90] line-through text-[16.82px] font-medium font-montserrat leading-[150%]">${course.price}</span>
-                        <span className="text-[#2ECC71] font-medium font-montserrat text-[16.82px] leading-[150%] tracking-[0%] capitalize w-[38px] h-[25px] flex items-center">Free</span>
+                        {/* We can show a fake 'original' price if we want, or just the main price */}
+                        {course.course_type === 'paid' ? (
+                            <span className="text-[#2ECC71] font-medium font-montserrat text-[16.82px] leading-[150%] tracking-[0%] capitalize flex items-center">
+                                ₹{course.course_price}
+                            </span>
+                        ) : (
+                            <span className="text-[#2ECC71] font-medium font-montserrat text-[16.82px] leading-[150%] tracking-[0%] capitalize flex items-center">
+                                Free
+                            </span>
+                        )}
                     </div>
                     <Link
-                        href="#"
-                        className="w-[88px] h-[25px] flex items-center justify-end text-[#1A0B10] font-medium font-montserrat text-[16.82px] leading-[150%] tracking-[-0.02em] capitalize hover:text-[#DC5178] transition-colors duration-300"
+                        href={`/course/${course.id}`}
+                        className="flex items-center justify-end text-[#1A0B10] font-medium font-montserrat text-[16.82px] leading-[150%] tracking-[-0.02em] capitalize hover:text-[#DC5178] transition-colors duration-300"
                     >
                         View More
                     </Link>

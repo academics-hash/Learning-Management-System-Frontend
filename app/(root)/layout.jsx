@@ -1,6 +1,8 @@
 import React from 'react'
 import Navbar from './compoents/Navbar'
 import Footer from './compoents/Footer'
+import AuthPopupModal from '@/components/AuthPopupModal'
+import EnquiryPopupModal from '@/components/EnquiryPopupModal'
 
 const HomeLayout = ({ children }) => {
     return (
@@ -9,8 +11,10 @@ const HomeLayout = ({ children }) => {
             <main className="grow">
                 {children}
             </main>
-            
+
             <Footer />
+            <AuthPopupModal />
+            <EnquiryPopupModal />
         </div>
     )
 }
