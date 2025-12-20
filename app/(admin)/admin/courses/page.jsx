@@ -85,10 +85,10 @@ const CoursesPage = () => {
                                                 )}
                                             </div>
                                             <div className="min-w-0">
-                                                <h4 className="font-lexend text-gray-900 text-sm font-bold truncate">
+                                                <h4 className="font-lexend text-gray-900 dark:text-white text-sm font-bold truncate">
                                                     {course.course_title}
                                                 </h4>
-                                                <p className="text-xs text-gray-500 font-jost mt-0.5 font-medium">
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 font-jost mt-0.5 font-medium">
                                                     {course.course_level || 'All Levels'}
                                                 </p>
                                             </div>
@@ -101,7 +101,7 @@ const CoursesPage = () => {
                                         {course.course_type === 'free' ? (
                                             <Badge variant="success">Free</Badge>
                                         ) : (
-                                            <span className="text-gray-900 font-bold font-lexend">
+                                            <span className="text-gray-900 dark:text-white font-bold font-lexend">
                                                 ₹{course.course_price}
                                             </span>
                                         )}
@@ -144,8 +144,8 @@ const CoursesPage = () => {
                             <BookOpen className="w-5 h-5 text-[#DC5178]" />
                         </div>
                         <div>
-                            <p className="text-gray-500 text-xs font-bold font-lexend uppercase tracking-wide">Total Courses</p>
-                            <p className="text-2xl font-bold text-gray-900 font-lexend">{courses.length}</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-xs font-bold font-lexend uppercase tracking-wide">Total Courses</p>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white font-lexend">{courses.length}</p>
                         </div>
                     </Card>
                     <Card className="flex items-center gap-4 border-l-4 border-l-emerald-500">
@@ -153,8 +153,8 @@ const CoursesPage = () => {
                             <Eye className="w-5 h-5 text-emerald-600" />
                         </div>
                         <div>
-                            <p className="text-gray-500 text-xs font-bold font-lexend uppercase tracking-wide">Published</p>
-                            <p className="text-2xl font-bold text-gray-900 font-lexend">
+                            <p className="text-gray-500 dark:text-gray-400 text-xs font-bold font-lexend uppercase tracking-wide">Published</p>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white font-lexend">
                                 {courses.filter(c => c.is_published).length}
                             </p>
                         </div>
@@ -164,8 +164,8 @@ const CoursesPage = () => {
                             <Edit className="w-5 h-5 text-amber-600" />
                         </div>
                         <div>
-                            <p className="text-gray-500 text-xs font-bold font-lexend uppercase tracking-wide">Drafts</p>
-                            <p className="text-2xl font-bold text-gray-900 font-lexend">
+                            <p className="text-gray-500 dark:text-gray-400 text-xs font-bold font-lexend uppercase tracking-wide">Drafts</p>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white font-lexend">
                                 {courses.filter(c => !c.is_published).length}
                             </p>
                         </div>

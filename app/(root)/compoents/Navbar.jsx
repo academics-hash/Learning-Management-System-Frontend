@@ -19,7 +19,10 @@ const Navbar = () => {
     const router = useRouter();
 
     useEffect(() => {
-        setMounted(true);
+        const timer = setTimeout(() => {
+            setMounted(true);
+        }, 0);
+        return () => clearTimeout(timer);
     }, []);
 
     // Close dropdown when clicking outside
@@ -101,12 +104,12 @@ const Navbar = () => {
 
                                 <div className="p-2">
                                     <Link
-                                        href={user?.role === 'admin' || user?.role === 'superadmin' ? '/admin' : '/dashboard'}
+                                        href={user?.role === 'admin' || user?.role === 'superadmin' ? '/admin' : user?.role === 'sales' ? '/sales' : '/'}
                                         onClick={() => setIsDropdownOpen(false)}
                                         className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all text-sm font-jost"
                                     >
                                         <LayoutDashboard size={16} className="text-[#D75287]" />
-                                        {user?.role === 'admin' || user?.role === 'superadmin' ? 'Admin Panel' : 'My Dashboard'}
+                                        {user?.role === 'admin' || user?.role === 'superadmin' ? 'Admin Panel' : user?.role === 'sales' ? 'Sales Dashboard' : 'My Dashboard'}
                                     </Link>
 
                                     <Link

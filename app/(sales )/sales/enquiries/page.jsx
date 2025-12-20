@@ -16,8 +16,7 @@ import {
     Clock,
     MessageSquare,
     ChevronLeft,
-    ChevronRight,
-    Loader2
+    ChevronRight
 } from "lucide-react";
 import {
     PageHeader,
@@ -40,7 +39,7 @@ import {
     Textarea
 } from '@/app/(admin)/admin/components/AdminUI';
 
-const EnquiriesPage = () => {
+const SalesEnquiriesPage = () => {
     const [page, setPage] = useState(1);
     const [statusFilter, setStatusFilter] = useState('');
     const [deleteId, setDeleteId] = useState(null);
@@ -50,7 +49,7 @@ const EnquiriesPage = () => {
     const limit = 10;
 
     // Fetch enquiries
-    const { data, isLoading, refetch } = useGetAllEnquiriesQuery({
+    const { data, isLoading, refetch, isError } = useGetAllEnquiriesQuery({
         status: statusFilter,
         page,
         limit
@@ -152,13 +151,14 @@ const EnquiriesPage = () => {
     };
 
     if (isLoading) return <LoadingState message="Loading enquiries..." />;
+    if (isError) return <ErrorState message="Failed to load enquiries" onRetry={refetch} />;
 
     return (
         <div className="space-y-6">
             {/* Page Header */}
             <PageHeader
-                title="Enquiries"
-                description="Manage customer and student enquiries"
+                title="Enquiries Management"
+                description="Track and handle customer enquiries for the sales team"
             >
                 <Button
                     variant="secondary"
@@ -202,8 +202,8 @@ const EnquiriesPage = () => {
                         />
                     </div>
                 </div>
-                <div className="text-sm text-gray-400 dark:text-gray-300 font-bold font-lexend uppercase tracking-wider">
-                    Showing <span className="text-[#DC5178]">{enquiries.length}</span> of <span className="text-gray-900 dark:text-white">{stats.total}</span> enquiries
+                <div className="text-sm text-gray-400 font-bold font-lexend uppercase tracking-wider">
+                    Showing <span className="text-[#DC5178]">{enquiries.length}</span> of <span className="text-gray-900">{stats.total}</span> enquiries
                 </div>
             </Card>
 
@@ -232,11 +232,11 @@ const EnquiriesPage = () => {
                                     <TableRow key={enquiry.id}>
                                         <TableCell>
                                             <div className="flex flex-col gap-1">
-                                                <div className="flex items-center gap-2 text-gray-900 dark:text-white font-bold font-lexend">
+                                                <div className="flex items-center gap-2 text-gray-900 font-bold font-lexend">
                                                     <User size={14} className="text-[#DC5178]" />
                                                     {enquiry.name}
                                                 </div>
-                                                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-xs font-semibold font-jost">
+                                                <div className="flex items-center gap-2 text-gray-500 text-xs font-semibold font-jost">
                                                     <Phone size={12} />
                                                     {enquiry.phoneNumber}
                                                 </div>
@@ -248,8 +248,8 @@ const EnquiriesPage = () => {
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            <p className="text-sm text-gray-500 dark:text-gray-300 max-w-[200px] truncate font-medium font-jost" title={enquiry.notes}>
-                                                {enquiry.notes || <span className="text-gray-300 dark:text-gray-600 italic">No notes</span>}
+                                            <p className="text-sm text-gray-500 max-w-[200px] truncate font-medium font-jost" title={enquiry.notes}>
+                                                {enquiry.notes || <span className="text-gray-300 italic">No notes</span>}
                                             </p>
                                         </TableCell>
                                         <TableCell>
@@ -284,9 +284,9 @@ const EnquiriesPage = () => {
 
                         {/* Pagination */}
                         {pagination.totalPages > 1 && (
-                            <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-800/10">
-                                <p className="text-gray-500 dark:text-gray-400 font-bold font-lexend text-xs uppercase tracking-wider">
-                                    Page <span className="text-[#DC5178]">{page}</span> / <span className="text-gray-900 dark:text-white">{pagination.totalPages}</span>
+                            <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
+                                <p className="text-gray-500 font-bold font-lexend text-xs uppercase tracking-wider">
+                                    Page <span className="text-[#DC5178]">{page}</span> / <span className="text-gray-900">{pagination.totalPages}</span>
                                 </p>
                                 <div className="flex gap-2">
                                     <Button
@@ -390,4 +390,4 @@ const EnquiriesPage = () => {
     );
 };
 
-export default EnquiriesPage;
+export default SalesEnquiriesPage;

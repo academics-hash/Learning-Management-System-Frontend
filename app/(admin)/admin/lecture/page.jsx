@@ -121,14 +121,14 @@ const LectureDashboard = () => {
 
                                 {/* Content */}
                                 <div className="p-5">
-                                    <h3 className="text-base font-bold text-gray-900 leading-tight font-lexend group-hover:text-[#DC5178] transition-colors line-clamp-2 min-h-[40px]">
+                                    <h3 className="text-base font-bold text-gray-900 dark:text-white leading-tight font-lexend group-hover:text-[#DC5178] transition-colors line-clamp-2 min-h-[40px]">
                                         {course.course_title}
                                     </h3>
                                 </div>
 
                                 {/* Footer */}
                                 <div className="px-5 py-4 border-t border-gray-50 flex items-center justify-between bg-gray-50/30">
-                                    <div className="flex items-center gap-2 text-[11px] text-gray-500 font-bold uppercase tracking-wider font-lexend">
+                                    <div className="flex items-center gap-2 text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider font-lexend">
                                         <Layers size={14} className="text-[#DC5178]" />
                                         <span>Manage Content</span>
                                     </div>

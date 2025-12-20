@@ -22,7 +22,9 @@ const AdminLayout = ({ children }) => {
         router.push('/login');
       } else {
         const role = user?.role;
-        if (role !== 'admin' && role !== 'superadmin') {
+        if (role === 'sales') {
+          router.push('/sales');
+        } else if (role !== 'admin' && role !== 'superadmin') {
           router.push('/');
         }
       }
@@ -47,13 +49,14 @@ const AdminLayout = ({ children }) => {
   // Show loader during hydration, loading, or if not authenticated/authorized
   if (!mounted || loading || !isAuthenticated || (user?.role !== 'admin' && user?.role !== 'superadmin')) {
     return (
-      <div className="h-screen w-full flex flex-col items-center justify-center bg-white gap-4">
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-white dark:bg-gray-950 gap-4">
         <Image
           src="/image/logo.png"
           alt="Stackup Logo"
           width={150}
           height={40}
           className="object-contain"
+          priority
         />
         <BiLoaderAlt className="animate-spin text-2xl text-[#DC5178]" />
       </div>
@@ -61,9 +64,9 @@ const AdminLayout = ({ children }) => {
   }
 
   return (
-    <div className="flex bg-[#F9FAFB] min-h-screen relative overflow-hidden">
+    <div className="flex bg-[#F9FAFB] dark:bg-gray-950 min-h-screen relative overflow-hidden transition-colors duration-300">
       {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-100 flex items-center justify-between px-4 z-110">
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-4 z-110">
         <Image
           src="/image/logo.png"
           alt="Stackup Logo"
@@ -73,7 +76,7 @@ const AdminLayout = ({ children }) => {
         />
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 hover:bg-gray-50 rounded-lg text-gray-400 hover:text-gray-900 transition-all"
+          className="p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all"
         >
           {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -82,7 +85,7 @@ const AdminLayout = ({ children }) => {
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-90"
+          className="md:hidden fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm z-90"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}

@@ -5,11 +5,19 @@ import { courseApi } from "../feature/api/courseApi";
 import { lectureApi } from "../feature/api/lectureApi";
 import { statsApi } from "../feature/api/statsApi";
 import { enquiryApi } from "../feature/api/enquiryApi";
+import { superadminApi } from "../feature/api/superadminApi";
 
 export const appStore = configureStore({
     reducer: rootReducer,
     middleware: (defaultMiddleware) =>
-        defaultMiddleware().concat(authApi.middleware, courseApi.middleware, lectureApi.middleware, statsApi.middleware, enquiryApi.middleware),
+        defaultMiddleware().concat(
+            authApi.middleware,
+            courseApi.middleware,
+            lectureApi.middleware,
+            statsApi.middleware,
+            enquiryApi.middleware,
+            superadminApi.middleware
+        ),
 });
 
 

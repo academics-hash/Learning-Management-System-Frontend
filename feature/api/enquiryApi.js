@@ -63,6 +63,11 @@ export const enquiryApi = createApi({
             query: () => "stats",
             providesTags: ["Enquiry"],
         }),
+        // Admin: Get enquiry trend for last 7 days
+        getEnquiryTrend: builder.query({
+            query: () => "trend",
+            providesTags: ["Enquiry"],
+        }),
     }),
 });
 
@@ -74,4 +79,5 @@ export const {
     useUpdateEnquiryMutation,
     useDeleteEnquiryMutation,
     useGetEnquiryStatsQuery,
+    useGetEnquiryTrendQuery,
 } = enquiryApi;

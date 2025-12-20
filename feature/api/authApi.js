@@ -141,6 +141,14 @@ export const authApi = createApi({
                 method: "GET",
             }),
         }),
+        // Change password
+        changePassword: builder.mutation({
+            query: (inputData) => ({
+                url: "change-password",
+                method: "POST",
+                body: inputData,
+            }),
+        }),
     }),
 });
 
@@ -157,4 +165,5 @@ export const {
     useSendResetOtpMutation,
     useResetPasswordMutation,
     useGetAllUsersQuery,
+    useChangePasswordMutation,
 } = authApi;

@@ -21,6 +21,8 @@ const AuthForm = ({ type }) => {
             const role = user?.role;
             if (role === 'admin' || role === 'superadmin') {
                 router.push('/admin');
+            } else if (role === 'sales') {
+                router.push('/sales');
             } else {
                 router.push('/');
             }
@@ -60,6 +62,8 @@ const AuthForm = ({ type }) => {
                 const role = result?.user?.role;
                 if (role === 'admin' || role === 'superadmin') {
                     router.push('/admin');
+                } else if (role === 'sales') {
+                    router.push('/sales');
                 } else {
                     router.push('/');
                 }

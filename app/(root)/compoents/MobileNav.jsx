@@ -10,7 +10,10 @@ const MobileNav = () => {
     const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
 
     React.useEffect(() => {
-        setMounted(true);
+        const timer = setTimeout(() => {
+            setMounted(true);
+        }, 0);
+        return () => clearTimeout(timer);
     }, []);
 
     return (
@@ -68,19 +71,28 @@ const MobileNav = () => {
 
                     {mounted && !loading && (
                         isAuthenticated ? (
-                            <Link
-                                href="/profile"
-                                onClick={() => setIsOpen(false)}
-                                className="flex flex-col items-center gap-2"
-                            >
-                                <Avatar className="w-16 h-16 border-2 border-[#DC5178]">
-                                    <AvatarImage src={user?.avatar} />
-                                    <AvatarFallback className="bg-[#1a191f] text-[#DC5178] text-xl font-bold font-lexend">
-                                        {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <span className="text-white font-medium font-switzer">My Profile</span>
-                            </Link>
+                            <div className="flex flex-col items-center gap-4">
+                                <Link
+                                    href={user?.role === 'admin' || user?.role === 'superadmin' ? '/admin' : user?.role === 'sales' ? '/sales' : '/dashboard'}
+                                    onClick={() => setIsOpen(false)}
+                                    className="text-white text-lg font-medium hover:text-[#DC5178] transition-colors"
+                                >
+                                    {user?.role === 'admin' || user?.role === 'superadmin' ? 'Admin Panel' : user?.role === 'sales' ? 'Sales Dashboard' : 'Dashboard'}
+                                </Link>
+                                <Link
+                                    href="/profile"
+                                    onClick={() => setIsOpen(false)}
+                                    className="flex flex-col items-center gap-2"
+                                >
+                                    <Avatar className="w-16 h-16 border-2 border-[#DC5178]">
+                                        <AvatarImage src={user?.avatar} />
+                                        <AvatarFallback className="bg-[#1a191f] text-[#DC5178] text-xl font-bold font-lexend">
+                                            {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <span className="text-white font-medium font-switzer">My Profile</span>
+                                </Link>
+                            </div>
                         ) : (
                             <Link
                                 href="/contact"

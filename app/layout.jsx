@@ -1,6 +1,7 @@
 import { Montserrat, Lexend_Deca, Inter, Jost } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
+import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 
 const montserrat = Montserrat({
@@ -30,13 +31,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${montserrat.variable} ${lexend.variable} ${inter.variable} ${jost.variable} antialiased`}
       >
         <StoreProvider>
-          {children}
-          <Toaster />
+          <ThemeProvider attribute="class">
+            {children}
+            <Toaster />
+          </ThemeProvider>
         </StoreProvider>
       </body>
     </html>

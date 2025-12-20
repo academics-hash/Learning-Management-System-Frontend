@@ -5,6 +5,7 @@ import { courseApi } from "../feature/api/courseApi";
 import { lectureApi } from "../feature/api/lectureApi";
 import { statsApi } from "../feature/api/statsApi";
 import { enquiryApi } from "../feature/api/enquiryApi";
+import { superadminApi } from "../feature/api/superadminApi";
 
 
 const rootReducer = combineReducers({
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     [lectureApi.reducerPath]: lectureApi.reducer,
     [statsApi.reducerPath]: statsApi.reducer,
     [enquiryApi.reducerPath]: enquiryApi.reducer,
+    [superadminApi.reducerPath]: superadminApi.reducer,
     auth: authReducer,
 });
 

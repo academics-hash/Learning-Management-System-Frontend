@@ -64,6 +64,8 @@ const AuthPopupModal = () => {
                 const role = result?.user?.role;
                 if (role === 'admin' || role === 'superadmin') {
                     router.push('/admin');
+                } else if (role === 'sales') {
+                    router.push('/sales');
                 } else {
                     router.push('/');
                 }
