@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useGetAllEnquiriesQuery, useDeleteEnquiryMutation, useUpdateEnquiryMutation, useGetEnquiryStatsQuery } from '@/feature/api/enquiryApi';
 import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
+import { getBaseUrl } from '@/utils/apiConfig';
 import {
     Download,
     Trash2,
@@ -69,7 +70,7 @@ const EnquiriesPage = () => {
     // Export to Excel function
     const exportToExcel = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/enquiry?limit=10000`, {
+            const response = await fetch(`${getBaseUrl('enquiry')}?limit=10000`, {
                 credentials: 'include'
             });
             const allData = await response.json();

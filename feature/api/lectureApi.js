@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getBaseUrl } from "../../utils/apiConfig";
 
 export const lectureApi = createApi({
     reducerPath: "lectureApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:8080/api/v1/video/",
+        baseUrl: getBaseUrl("video"),
         credentials: "include",
     }),
     tagTypes: ["Lecture", "CourseLecture"],
@@ -72,7 +73,7 @@ export const lectureApi = createApi({
             query: (lectureOrders) => ({
                 url: "lecture/reorder",
                 method: "PUT",
-                body: { lectureOrders },
+                body: lectureOrders,
             }),
             invalidatesTags: ["CourseLecture"],
         }),

@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getBaseUrl } from "../../utils/apiConfig";
 
 export const courseApi = createApi({
     reducerPath: "courseApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:8080/api/v1/course/",
+        baseUrl: getBaseUrl("course"),
         credentials: "include",
     }),
     tagTypes: ["Course", "CreatorCourse"],

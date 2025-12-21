@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getBaseUrl } from "../../utils/apiConfig";
 
 export const superadminApi = createApi({
     reducerPath: "superadminApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:8080/api/v1/user/",
+        baseUrl: getBaseUrl("user"),
         credentials: "include",
     }),
     tagTypes: ["AdminMentor", "AdminCourse"],
@@ -39,7 +40,7 @@ export const superadminApi = createApi({
         // Admin/Super Admin: Get all courses (including unpublished)
         getAdminCourses: builder.query({
             query: () => ({
-                url: "http://localhost:8080/api/v1/course/all-courses",
+                url: getBaseUrl("course") + "all-courses",
                 method: "GET",
             }),
             providesTags: ["AdminCourse"],

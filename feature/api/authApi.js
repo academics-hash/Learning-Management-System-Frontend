@@ -2,12 +2,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { userLoggedIn, userLoggedOut } from "../authSlice";
 
-const USER_API = process.env.NEXT_PUBLIC_API_URL;
+import { getBaseUrl } from "../../utils/apiConfig";
 
 export const authApi = createApi({
     reducerPath: "authApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:8080/api/v1/user/",
+        baseUrl: getBaseUrl("user"),
         credentials: "include",
     }),
     endpoints: (builder) => ({
