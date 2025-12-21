@@ -43,16 +43,16 @@ const Footer = () => {
                         <div>
                             <h3 className="text-white text-lg font-semibold mb-6 tracking-wide font-lexend">PROGRAMS</h3>
                             <ul className="space-y-4">
-                                <li><Link href="/art-design" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">MERN Stack</Link></li>
-                                <li><Link href="/art-design" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Python Full Stack</Link></li>
-                                <li><Link href="/business" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">AI/ML</Link></li>
-                                <li><Link href="/languages" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Data Science</Link></li>
-                                <li><Link href="/programming" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Data Analytics</Link></li>
+                                <li><Link href="/programs/mern-stack" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">MERN Stack</Link></li>
+                                <li><Link href="/programs/python-full-stack" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Python Full Stack</Link></li>
+                                <li><Link href="/programs/ai-ml" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">AI/ML</Link></li>
+                                <li><Link href="/programs/data-science" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Data Science</Link></li>
+                                <li><Link href="/programs/data-analytics" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Data Analytics</Link></li>
 
-                                <li><Link href="/programming" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Digital Marketing</Link></li>
-                                <li><Link href="/programming" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Software Testing</Link></li>
-                                <li><Link href="/it-software" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">UI/UX</Link></li>
-                                <li><Link href="/programming" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Flutter</Link></li>
+                                <li><Link href="/programs/digital-marketing" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Digital Marketing</Link></li>
+                                <li><Link href="/programs/software-testing" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Software Testing</Link></li>
+                                <li><Link href="/programs/ui-ux" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">UI/UX</Link></li>
+                                <li><Link href="/programs/flutter" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Flutter</Link></li>
                             </ul>
                         </div>
 
