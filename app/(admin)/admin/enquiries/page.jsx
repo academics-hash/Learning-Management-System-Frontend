@@ -109,29 +109,31 @@ const EnquiriesPage = () => {
 
     const handleDelete = async () => {
         if (!deleteId) return;
-        try {
-            await deleteEnquiry(deleteId).unwrap();
-            toast.success("Enquiry deleted successfully");
-            setDeleteId(null);
-            refetch();
-        } catch (error) {
-            toast.error(error?.data?.message || "Failed to delete enquiry");
-        }
+        toast.promise(deleteEnquiry(deleteId).unwrap(), {
+            loading: 'Deleting enquiry...',
+            success: () => {
+                setDeleteId(null);
+                refetch();
+                return "Enquiry deleted successfully";
+            },
+            error: (error) => error?.data?.message || "Failed to delete enquiry"
+        });
     };
 
     const handleUpdate = async () => {
         if (!editingEnquiry) return;
-        try {
-            await updateEnquiry({
-                id: editingEnquiry.id,
-                ...editData
-            }).unwrap();
-            toast.success("Enquiry updated successfully");
-            setEditingEnquiry(null);
-            refetch();
-        } catch (error) {
-            toast.error(error?.data?.message || "Failed to update enquiry");
-        }
+        toast.promise(updateEnquiry({
+            id: editingEnquiry.id,
+            ...editData
+        }).unwrap(), {
+            loading: 'Updating enquiry status...',
+            success: () => {
+                setEditingEnquiry(null);
+                refetch();
+                return "Enquiry updated successfully";
+            },
+            error: (error) => error?.data?.message || "Failed to update enquiry"
+        });
     };
 
     const startEdit = (enquiry) => {

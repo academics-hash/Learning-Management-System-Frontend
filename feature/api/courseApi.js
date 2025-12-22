@@ -100,8 +100,10 @@ export const courseApi = createApi({
             query: (courseId) => ({
                 url: `${courseId}/content`,
                 method: "GET",
-            })
+            }),
+            providesTags: (result, error, courseId) => [{ type: "Course", id: courseId }],
         }),
+
 
         // Student: Get FULL course content (requires auth + enrollment)
         getCourseFullContent: builder.query({

@@ -117,18 +117,18 @@ export default function ProgramDetailClient({ program }) {
 
             {/* Futuristic Background Elements */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-pink-500/10 rounded-full blur-[120px]" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px]" />
+                <div className="absolute top-[20%] left-[10%] w-[40%] h-[40%] bg-linear-to-tr from-[#DC5178]/10 to-transparent rounded-full blur-2xl" />
+                <div className="absolute bottom-[20%] right-[10%] w-[30%] h-[30%] bg-linear-to-bl from-blue-500/5 to-transparent rounded-full blur-2xl" />
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-50" />
             </div>
 
             {/* Navigation Bar (Simple for details) */}
             <nav className="relative z-50 px-6 py-8 flex justify-between items-center max-w-7xl mx-auto">
-                <Link href="/programs" className="group flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-300">
+                <Link href="/" className="group flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-300">
                     <div className="p-2 rounded-full bg-white/5 border border-white/10 group-hover:bg-pink-500/20 group-hover:border-pink-500/50 transition-all duration-300">
                         <ArrowLeft className="w-5 h-5" />
                     </div>
-                    <span>Back to Programs</span>
+                    <span>Back to Home</span>
                 </Link>
             </nav>
 
@@ -166,7 +166,7 @@ export default function ProgramDetailClient({ program }) {
                         </div>
                     </div>
                     <div className="hero-image flex-1 relative group w-full max-w-lg">
-                        <div className="absolute inset-0 bg-pink-600/20 rounded-3xl blur-[40px] group-hover:blur-[60px] transition-all duration-500" />
+                        <div className="absolute inset-0 bg-pink-600/20 rounded-3xl blur-3xl group-hover:blur-3xl transition-all duration-500" />
                         <div className="relative aspect-square rounded-3xl overflow-hidden border border-white/10 backdrop-blur-md">
                             <Image
                                 src={program.image}
@@ -174,7 +174,7 @@ export default function ProgramDetailClient({ program }) {
                                 fill
                                 className="object-cover scale-105 group-hover:scale-110 transition-transform duration-700"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
                             <div className="absolute bottom-6 left-6 right-6">
                                 <div className="p-4 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20">
                                     <div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Career Path</div>
@@ -267,7 +267,7 @@ export default function ProgramDetailClient({ program }) {
             </main>
 
             {/* Footer space */}
-            <div className="h-24 bg-gradient-to-t from-pink-500/5 to-transparent" />
+            <div className="py-20 bg-linear-to-t from-slate-50 to-white" />
         </div>
     );
 }

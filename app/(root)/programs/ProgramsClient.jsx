@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import {
+    ArrowLeft,
     ArrowUpRight,
     Monitor,
     Brain,
@@ -58,7 +59,17 @@ export default function ProgramsClient({ programsData }) {
                 <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-500/10 rounded-full blur-[120px]" />
             </div>
 
-            <main className="relative z-10 max-w-7xl mx-auto px-6 pt-24">
+            {/* Navigation Bar */}
+            <nav className="relative z-50 px-6 py-8 flex justify-between items-center max-w-7xl mx-auto">
+                <Link href="/" className="group flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-300">
+                    <div className="p-2 rounded-full bg-white/5 border border-white/10 group-hover:bg-pink-500/20 group-hover:border-pink-500/50 transition-all duration-300">
+                        <ArrowLeft className="w-5 h-5" />
+                    </div>
+                    <span>Back to Home</span>
+                </Link>
+            </nav>
+
+            <main className="relative z-10 max-w-7xl mx-auto px-6 pt-12">
                 <div className="page-title space-y-6 text-center mb-24">
                     <h1 className="text-6xl md:text-8xl font-lexend font-bold tracking-tighter">
                         EXPLORE OUR <br />
@@ -79,7 +90,7 @@ export default function ProgramsClient({ programsData }) {
                         >
                             <div className="relative h-full p-8 rounded-[32px] bg-white/5 border border-white/10 overflow-hidden transition-all duration-500 hover:bg-white/10 hover:border-pink-500/50 hover:-translate-y-2">
                                 {/* Gradient Background on Hover */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-pink-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                <div className="absolute inset-0 bg-linear-to-br from-pink-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                                 <div className="relative z-10 space-y-6 flex flex-col h-full">
                                     <div className="flex justify-between items-start">

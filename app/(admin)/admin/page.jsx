@@ -3,8 +3,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useGetDashboardStatsQuery } from '@/feature/api/statsApi';
 import { useGetEnquiryStatsQuery, useGetEnquiryTrendQuery } from '@/feature/api/enquiryApi';
+import { useGetAllEnrollmentsQuery } from '@/feature/api/enrollmentApi';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { Users, BookOpen, Video, TrendingUp, Clock, ArrowUpRight, ArrowDownRight, Activity, MessageSquare, Target, Shield } from 'lucide-react';
+import { Users, BookOpen, Video, TrendingUp, Clock, ArrowUpRight, ArrowDownRight, Activity, MessageSquare, Target, Shield, GraduationCap } from 'lucide-react';
 import { PageHeader, Card, StatCard, LoadingState, ErrorState, Badge, typography } from '@/app/(admin)/admin/components/AdminUI';
 
 const AdminDashboard = () => {
@@ -12,6 +13,8 @@ const AdminDashboard = () => {
   const isSuperAdmin = user?.role === 'superadmin';
 
   const { data, isLoading: isStatsLoading, error, refetch } = useGetDashboardStatsQuery();
+  const { data: enrollmentData, isLoading: isEnrollmentLoading } = useGetAllEnrollmentsQuery();
+
 
   // Fetch sales data only for superadmins
   const { data: enquiryData, isLoading: isEnquiryLoading } = useGetEnquiryStatsQuery(undefined, {
@@ -21,12 +24,14 @@ const AdminDashboard = () => {
     skip: !isSuperAdmin
   });
 
-  if (isStatsLoading || (isSuperAdmin && (isEnquiryLoading || isTrendLoading))) return <LoadingState message="Loading dashboard..." />;
+  if (isStatsLoading || isEnrollmentLoading || (isSuperAdmin && (isEnquiryLoading || isTrendLoading))) return <LoadingState message="Loading dashboard..." />;
   if (error) return <ErrorState message="Failed to load dashboard statistics" onRetry={refetch} />;
 
-  const stats = data?.stats || { totalUsers: 0, totalCourses: 0, totalLectures: 0 };
+  const stats = data?.stats || { totalUsers: 0, totalCourses: 0, totalLectures: 0, totalPlacements: 0 };
   const activities = data?.activities || [];
+  const enrollments = enrollmentData?.enrollments || [];
   const enquiryStats = enquiryData?.data || { total: 0, pending: 0, contacted: 0, converted: 0, rejected: 0 };
+
   const leadTrendData = trendDataRaw?.data || [];
 
   // Icon mapping for activities
@@ -35,6 +40,7 @@ const AdminDashboard = () => {
     course: BookOpen,
     lecture: Video,
     enquiry: MessageSquare,
+    placement: Target,
     default: Activity
   };
 
@@ -55,6 +61,7 @@ const AdminDashboard = () => {
     { name: 'Students', value: stats.totalUsers, color: '#DC5178' },
     { name: 'Courses', value: stats.totalCourses, color: '#4F46E5' },
     { name: 'Lectures', value: stats.totalLectures, color: '#10B981' },
+    { name: 'Placements', value: stats.totalPlacements, color: '#f59e0b' },
   ];
 
   // Sales Distribution Data (for Superadmin)
@@ -64,7 +71,7 @@ const AdminDashboard = () => {
     { name: 'Converted', value: enquiryStats.converted, color: '#10B981' },
   ];
 
-  const COLORS = ['#DC5178', '#4F46E5', '#10B981'];
+  const COLORS = ['#DC5178', '#4F46E5', '#10B981', '#f59e0b'];
   const SALES_COLORS = ['#f59e0b', '#4F46E5', '#10B981'];
 
   return (
@@ -96,9 +103,9 @@ const AdminDashboard = () => {
           variant="emerald"
         />
         <StatCard
-          title="Platform Activity"
-          value={activities.length > 0 ? "Live" : "Low"}
-          icon={Activity}
+          title="Placements"
+          value={stats.totalPlacements}
+          icon={Target}
           variant="amber"
         />
       </div>
@@ -292,15 +299,79 @@ const AdminDashboard = () => {
             <div>
               <p className="text-gray-500 dark:text-gray-400 text-xs font-bold font-lexend mb-1 uppercase tracking-wider">Total Platform Content</p>
               <p className="text-2xl font-bold text-[#DC5178] font-lexend">
-                {(stats.totalUsers + stats.totalCourses + stats.totalLectures).toLocaleString()}
+                {(stats.totalUsers + stats.totalCourses + stats.totalLectures + stats.totalPlacements).toLocaleString()}
               </p>
             </div>
             <TrendingUp className="w-8 h-8 text-[#DC5178] opacity-50" />
           </div>
         </Card>
       </div>
+      {/* Enrollment Overview */}
+      <Card>
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-[#DC5178] rounded-full"></div>
+            <h2 className={typography.h2}>Student Enrollments</h2>
+          </div>
+          <Badge variant="pink">{enrollments.length} Total Enrolled</Badge>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left font-jost border-separate border-spacing-y-2">
+            <thead>
+              <tr className="text-gray-400 text-xs font-bold uppercase tracking-wider">
+                <th className="px-6 py-4">Student</th>
+                <th className="px-6 py-4">Course</th>
+                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4 text-right">Date joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              {enrollments.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="px-6 py-12 text-center text-gray-400 font-jost italic bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
+                    No enrollments found yet.
+                  </td>
+                </tr>
+              ) : (
+                enrollments.slice(0, 10).map((enrollment, index) => (
+                  <tr key={index} className="bg-gray-50 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-all group">
+                    <td className="px-6 py-4 rounded-l-2xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-pink-100 dark:bg-pink-900/20 flex items-center justify-center text-[#DC5178] font-bold text-xs uppercase">
+                          {enrollment.student?.name?.[0] || 'U'}
+                        </div>
+                        <div>
+                          <p className="text-gray-900 dark:text-white font-bold text-sm">{enrollment.student?.name || 'Unknown User'}</p>
+                          <p className="text-gray-400 text-xs">{enrollment.student?.email || 'N/A'}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-gray-700 dark:text-gray-300 font-medium text-sm line-clamp-1">
+                        {enrollment.course?.course_title || 'Unknown Course'}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Badge variant={enrollment.is_active ? 'success' : 'secondary'}>
+                        {enrollment.is_active ? 'Active' : 'Inactive'}
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-4 text-right rounded-r-2xl">
+                      <p className="text-gray-500 font-medium text-sm">
+                        {new Date(enrollment.createdAt).toLocaleDateString()}
+                      </p>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Card>
     </div>
   );
 };
+
 
 export default AdminDashboard;

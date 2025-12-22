@@ -104,7 +104,7 @@ const Hero = () => {
                          However, `Link` component might not hold the style/className perfectly if animated externally sometimes? No, `from` animates the DOM element. The `Link` produces an `<a>` tag in the DOM. So `children[3]` will be that `<a>`. It should work.
                          */}
                         <Link
-                            href="/course"
+                            href="/courses"
                             className="flex items-center justify-center w-[129px] h-[44px] bg-[#D75287] hover:bg-[#c74772] text-white gap-[6px] rounded-[80px] px-[20px] py-[16px] transition-all shadow-[0_0_20px_rgba(215,82,135,0.4)] hover:shadow-[0_0_30px_rgba(215,82,135,0.6)] text-[16px] font-medium font-inter leading-[100%] tracking-[0%]"
                         >
                             Get Started

@@ -1,12 +1,24 @@
 "use client";
-import React from 'react'
+import React, { useMemo } from 'react'
 import CourseCard from './CourseCard'
 import Link from 'next/link'
-
+import { useSelector } from 'react-redux'
 import { useGetPublishedCoursesQuery } from '@/feature/api/courseApi';
+import { useGetMyEnrolledCoursesQuery } from '@/feature/api/enrollmentApi';
 
 const CourseSelection = () => {
     const { data, isLoading, error } = useGetPublishedCoursesQuery();
+    const { user } = useSelector((state) => state.auth);
+    const { data: enrolledData } = useGetMyEnrolledCoursesQuery(undefined, { skip: !user });
+
+    // Create a set of enrolled course IDs for quick lookup
+    const enrolledCourseIds = useMemo(() => {
+        const ids = new Set();
+        if (enrolledData?.courses) {
+            enrolledData.courses.forEach(course => ids.add(course.id));
+        }
+        return ids;
+    }, [enrolledData]);
 
     if (isLoading) return <div>Loading...</div>; // Or a nice skeleton
     if (error) return <div>Error loading courses</div>;
@@ -35,9 +47,17 @@ const CourseSelection = () => {
 
                 {/* Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                    {courses.map(course => (
-                        <CourseCard key={course.id} course={course} />
-                    ))}
+                    {courses.map(course => {
+                        const isEnrolled = enrolledCourseIds.has(course.id);
+                        return (
+                            <CourseCard
+                                key={course.id}
+                                course={course}
+                                showProgress={isEnrolled}
+                                progress={0}
+                            />
+                        );
+                    })}
                 </div>
             </div>
         </section>
@@ -45,3 +65,4 @@ const CourseSelection = () => {
 }
 
 export default CourseSelection
+

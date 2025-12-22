@@ -8,9 +8,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useLogoutUserMutation } from '@/feature/api/authApi';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { LayoutDashboard, User, LogOut, Settings } from 'lucide-react';
+import { LayoutDashboard, User, LogOut, Settings, BookOpen } from 'lucide-react';
+
+
+import { userLoggedOut } from '@/feature/authSlice';
+import { authApi } from '@/feature/api/authApi';
 
 const Navbar = () => {
+    const dispatch = useDispatch();
     const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -37,13 +42,19 @@ const Navbar = () => {
     }, []);
 
     const handleLogout = async () => {
+        setIsDropdownOpen(false);
         try {
             await logoutUser().unwrap();
+            dispatch(userLoggedOut());
+            dispatch(authApi.util.resetApiState());
             toast.success("Logged out successfully");
-            setIsDropdownOpen(false);
-            router.push('/');
+            // Use window.location.href for a clean reset of all states and caches
+            window.location.href = '/';
         } catch (error) {
-            toast.error("Logout failed");
+            // Still clear local state on error
+            dispatch(userLoggedOut());
+            dispatch(authApi.util.resetApiState());
+            window.location.href = '/';
         }
     };
 
@@ -71,7 +82,7 @@ const Navbar = () => {
                 <Link href="/placement" className="text-white/90 hover:text-white text-[16px] font-normal leading-[100%] tracking-[0%] transition-colors" style={{ fontFamily: 'Switzer, sans-serif' }}>
                     Placement
                 </Link>
-                <Link href="/course" className="text-white/90 hover:text-white text-[16px] font-normal leading-[100%] tracking-[0%] transition-colors" style={{ fontFamily: 'Switzer, sans-serif' }}>
+                <Link href="/courses" className="text-white/90 hover:text-white text-[16px] font-normal leading-[100%] tracking-[0%] transition-colors" style={{ fontFamily: 'Switzer, sans-serif' }}>
                     Courses
                 </Link>
             </div>
@@ -120,7 +131,17 @@ const Navbar = () => {
                                         <User size={16} className="text-[#D75287]" />
                                         Profile Settings
                                     </Link>
+
+                                    <Link
+                                        href="/my-learning"
+                                        onClick={() => setIsDropdownOpen(false)}
+                                        className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all text-sm font-jost"
+                                    >
+                                        <BookOpen size={16} className="text-[#D75287]" />
+                                        My Learning
+                                    </Link>
                                 </div>
+
 
                                 <div className="p-2 border-t border-white/5">
                                     <button

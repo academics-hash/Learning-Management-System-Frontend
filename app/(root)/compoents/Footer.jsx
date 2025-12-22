@@ -41,7 +41,9 @@ const Footer = () => {
 
                         {/* Programs Column */}
                         <div>
+                            <Link href="/programs">
                             <h3 className="text-white text-lg font-semibold mb-6 tracking-wide font-lexend">PROGRAMS</h3>
+                            </Link>
                             <ul className="space-y-4">
                                 <li><Link href="/programs/mern-stack" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">MERN Stack</Link></li>
                                 <li><Link href="/programs/python-full-stack" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Python Full Stack</Link></li>

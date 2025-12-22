@@ -6,6 +6,11 @@ import { lectureApi } from "../feature/api/lectureApi";
 import { statsApi } from "../feature/api/statsApi";
 import { enquiryApi } from "../feature/api/enquiryApi";
 import { superadminApi } from "../feature/api/superadminApi";
+import { placementApi } from "../feature/api/placementApi";
+import { courseProgressApi } from "../feature/api/courseprogressApi";
+import { enrollmentApi } from "../feature/api/enrollmentApi";
+
+
 
 
 const rootReducer = combineReducers({
@@ -16,6 +21,11 @@ const rootReducer = combineReducers({
     [statsApi.reducerPath]: statsApi.reducer,
     [enquiryApi.reducerPath]: enquiryApi.reducer,
     [superadminApi.reducerPath]: superadminApi.reducer,
+    [placementApi.reducerPath]: placementApi.reducer,
+    [courseProgressApi.reducerPath]: courseProgressApi.reducer,
+    [enrollmentApi.reducerPath]: enrollmentApi.reducer,
+
+
     auth: authReducer,
 });
 

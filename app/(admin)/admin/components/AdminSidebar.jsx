@@ -1,18 +1,21 @@
 "use client";
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, BookOpen, Video, Users, Settings, Sun, Moon, MessageSquare, ChevronLeft, ChevronRight, Menu, Shield } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Video, Users, Settings, Sun, Moon, MessageSquare, ChevronLeft, ChevronRight, Menu, Shield, Briefcase, GraduationCap } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { useState, useEffect } from 'react';
 import { useLogoutUserMutation } from '@/feature/api/authApi';
 import { toast } from 'sonner';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BiLoaderAlt } from 'react-icons/bi';
 import { MdLogout } from "react-icons/md";
+import { userLoggedOut } from '@/feature/authSlice';
+import { authApi } from '@/feature/api/authApi';
 import Image from "next/image";
 
 const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
+    const dispatch = useDispatch();
     const pathname = usePathname();
     const router = useRouter();
     const { setTheme, theme } = useTheme();
@@ -30,11 +33,17 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
     const handleLogout = async () => {
         try {
             await logoutUser().unwrap();
+            dispatch(userLoggedOut());
+            dispatch(authApi.util.resetApiState());
             toast.success("Logged out successfully");
-            router.push('/login');
+            // Use window.location.assign for a clean logout and transition to login
+            window.location.assign('/login');
         } catch (error) {
             console.error("Logout failed", error);
-            toast.error("Failed to log out");
+            // Still clear local state and redirect on error
+            dispatch(userLoggedOut());
+            dispatch(authApi.util.resetApiState());
+            window.location.assign('/login');
         }
     };
 
@@ -45,7 +54,10 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
         { name: "Employees", href: "/admin/employees", icon: Shield },
         { name: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
         { name: "Users", href: "/admin/users", icon: Users },
+        { name: "Enrollments", href: "/admin/enrollments", icon: GraduationCap },
+        { name: "Placements", href: "/admin/placements", icon: Briefcase },
         { name: "Settings", href: "/admin/settings", icon: Settings },
+
     ];
 
     return (

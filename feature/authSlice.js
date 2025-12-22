@@ -15,13 +15,13 @@ const authSlice = createSlice({
     // Action to set the user and update authentication status
     setUser: (state, action) => {
       state.user = action.payload;
-      state.isAuthenticated = true;
+      state.isAuthenticated = !!action.payload;
       state.loading = false;
     },
     // Action to log the user in (alternative naming)
     userLoggedIn: (state, action) => {
       state.user = action.payload.user;
-      state.isAuthenticated = true;
+      state.isAuthenticated = !!action.payload.user;
       state.loading = false;
     },
     // Action to log the user out and reset authentication status

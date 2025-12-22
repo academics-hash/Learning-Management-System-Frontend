@@ -61,7 +61,7 @@ const MobileNav = () => {
                         Placement
                     </Link>
                     <Link
-                        href="/course"
+                        href="/courses"
                         onClick={() => setIsOpen(false)}
                         className="text-white text-lg font-medium hover:text-[#DC5178] transition-colors"
                         style={{ fontFamily: 'Switzer, sans-serif' }}

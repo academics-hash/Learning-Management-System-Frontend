@@ -466,6 +466,7 @@ export const IconButton = ({
     variant = "ghost",
     size = "md",
     title,
+    loading = false,
     className = "",
     ...props
 }) => {
@@ -487,12 +488,19 @@ export const IconButton = ({
             className={`
                 ${variants[variant]} ${sizes[size]}
                 rounded-lg transition-all duration-200
+                disabled:opacity-50 disabled:cursor-not-allowed
+                relative flex items-center justify-center
                 ${className}
             `}
             title={title}
+            disabled={props.disabled || loading}
             {...props}
         >
-            <Icon size={size === "sm" ? 14 : size === "lg" ? 20 : 16} />
+            {loading ? (
+                <Loader2 size={size === "sm" ? 14 : size === "lg" ? 20 : 16} className="animate-spin" />
+            ) : (
+                <Icon size={size === "sm" ? 14 : size === "lg" ? 20 : 16} />
+            )}
         </button>
     );
 };
