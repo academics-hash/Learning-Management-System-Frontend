@@ -68,6 +68,49 @@ export const enrollmentApi = createApi({
             }),
             providesTags: ["Enrollment"],
         }),
+        // STUDENT: Request course access
+        requestCourseAccess: builder.mutation({
+            query: (courseId) => ({
+                url: `request/${courseId}`,
+                method: "POST",
+            }),
+            invalidatesTags: (result, error, courseId) => [
+                "Enrollment",
+                { type: "Enrollment", id: courseId },
+            ],
+        }),
+        // ADMIN: Get pending enrollments
+        getPendingEnrollments: builder.query({
+            query: () => ({
+                url: "pending",
+                method: "GET",
+            }),
+            providesTags: ["Enrollment"],
+        }),
+        // ADMIN: Approve enrollment
+        approveEnrollment: builder.mutation({
+            query: (enrollmentId) => ({
+                url: `approve/${enrollmentId}`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ["Enrollment"],
+        }),
+        // ADMIN: Reject enrollment
+        rejectEnrollment: builder.mutation({
+            query: (enrollmentId) => ({
+                url: `reject/${enrollmentId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Enrollment"],
+        }),
+        // ADMIN: Activate enrollment
+        activateEnrollment: builder.mutation({
+            query: (enrollmentId) => ({
+                url: `activate/${enrollmentId}`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ["Enrollment"],
+        }),
     }),
 });
 
@@ -78,5 +121,10 @@ export const {
     useGrantCourseAccessMutation,
     useRevokeCourseAccessMutation,
     useGetAllEnrollmentsQuery,
+    useRequestCourseAccessMutation,
+    useGetPendingEnrollmentsQuery,
+    useApproveEnrollmentMutation,
+    useRejectEnrollmentMutation,
+    useActivateEnrollmentMutation,
 } = enrollmentApi;
 

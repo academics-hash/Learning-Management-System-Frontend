@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, BookOpen, Video, Users, Settings, Sun, Moon, MessageSquare, ChevronLeft, ChevronRight, Menu, Shield, Briefcase, GraduationCap } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Video, Users, Settings, Sun, Moon, MessageSquare, ChevronLeft, ChevronRight, Menu, Shield, Briefcase, GraduationCap, Clock } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { useState, useEffect } from 'react';
 import { useLogoutUserMutation } from '@/feature/api/authApi';
@@ -12,6 +12,7 @@ import { BiLoaderAlt } from 'react-icons/bi';
 import { MdLogout } from "react-icons/md";
 import { userLoggedOut } from '@/feature/authSlice';
 import { authApi } from '@/feature/api/authApi';
+import { useGetPendingEnrollmentsQuery } from '@/feature/api/enrollmentApi';
 import Image from "next/image";
 
 const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
@@ -22,6 +23,13 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
     const [mounted, setMounted] = useState(false);
     const [logoutUser, { isLoading }] = useLogoutUserMutation();
     const { user } = useSelector((state) => state.auth);
+
+    // Fetch pending requests for badge count
+    const { data: pendingData } = useGetPendingEnrollmentsQuery(undefined, {
+        skip: !user || user.role === 'user',
+        pollingInterval: 30000, // Refresh every 30 seconds
+    });
+    const pendingCount = pendingData?.enrollments?.length || 0;
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -55,6 +63,7 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
         { name: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
         { name: "Users", href: "/admin/users", icon: Users },
         { name: "Enrollments", href: "/admin/enrollments", icon: GraduationCap },
+        { name: "Course Requests", href: "/admin/enrollments/requests", icon: Clock },
         { name: "Placements", href: "/admin/placements", icon: Briefcase },
         { name: "Settings", href: "/admin/settings", icon: Settings },
 
@@ -120,13 +129,30 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
                                 : "text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                                 } ${isCollapsed ? "justify-center" : ""}`}
                         >
-                            <Icon size={18} className={`shrink-0 ${isActive ? "text-[#DC5178]" : ""}`} />
+                            <div className="relative">
+                                <Icon size={18} className={`shrink-0 ${isActive ? "text-[#DC5178]" : ""}`} />
+                                {isCollapsed && link.name === "Course Requests" && pendingCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#DC5178] rounded-full border border-white dark:border-gray-900 animate-pulse" />
+                                )}
+                            </div>
                             {!isCollapsed && <span className="font-semibold">{link.name}</span>}
 
-                            {/* Tooltip for collapsed state */}
+                            {/* Pending Requests Badge */}
+                            {!isCollapsed && link.name === "Course Requests" && pendingCount > 0 && (
+                                <span className="ml-auto bg-[#DC5178] text-white text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] flex items-center justify-center animate-pulse">
+                                    {pendingCount}
+                                </span>
+                            )}
+
+                            {/* Tooltip for collapsed state (with count if applicable) */}
                             {isCollapsed && (
-                                <div className="absolute left-full ml-4 px-3 py-1.5 bg-gray-900 dark:bg-gray-800 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 whitespace-nowrap shadow-xl">
+                                <div className="absolute left-full ml-4 px-3 py-1.5 bg-gray-900 dark:bg-gray-800 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 whitespace-nowrap shadow-xl flex items-center gap-2">
                                     {link.name}
+                                    {link.name === "Course Requests" && pendingCount > 0 && (
+                                        <span className="bg-[#DC5178] px-1.5 rounded-full text-[10px] font-black">
+                                            {pendingCount}
+                                        </span>
+                                    )}
                                 </div>
                             )}
                         </Link>

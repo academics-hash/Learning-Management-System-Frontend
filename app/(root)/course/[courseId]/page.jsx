@@ -24,7 +24,7 @@ import { useGSAP } from "@gsap/react";
 import {
     useGetCourseProgressQuery
 } from "@/feature/api/courseprogressApi";
-import { useEnrollInFreeCourseMutation } from "@/feature/api/enrollmentApi";
+import { useEnrollInFreeCourseMutation, useCheckCourseAccessQuery, useRequestCourseAccessMutation } from "@/feature/api/enrollmentApi";
 import { toast } from "sonner";
 
 
@@ -36,6 +36,9 @@ const CourseDetail = ({ params }) => {
     const { data, isLoading, error, refetch } = useGetCourseContentQuery(courseId);
     const { user } = useSelector((state) => state.auth);
     const [enrollInFreeCourse, { isLoading: isEnrolling }] = useEnrollInFreeCourseMutation();
+    const [requestCourseAccess, { isLoading: isRequesting }] = useRequestCourseAccessMutation();
+
+    const { data: accessData, isLoading: isAccessLoading } = useCheckCourseAccessQuery(courseId, { skip: !user });
 
 
     // Fetch course progress only if user is logged in
@@ -48,14 +51,14 @@ const CourseDetail = ({ params }) => {
     const router = useRouter();
     const [isPlayingPreview, setIsPlayingPreview] = useState(false);
 
+
     const handleEnrollNow = async () => {
         if (!user) {
             router.push("/login");
             return;
         }
 
-        const isEnrolled = !!user && data?.accessType === "enrolled";
-
+        const isEnrolled = accessData?.status === "active";
 
         if (isEnrolled) {
             if (data?.course?.lectures?.[0]?.id) {
@@ -72,14 +75,17 @@ const CourseDetail = ({ params }) => {
                 const response = await enrollInFreeCourse(courseId).unwrap();
                 toast.success("Enrollment successful!");
                 refetch(); // Update course content access status
-
             } catch (err) {
                 toast.error(err?.data?.message || "Failed to enroll in free course.");
             }
         } else {
-
-            // For paid courses, navigate to checkout or show info
-            toast.info("This is a paid course. Payment integration is coming soon.");
+            // PAID COURSE REQUEST LOGIC
+            try {
+                await requestCourseAccess(courseId).unwrap();
+                toast.success("Request sent! Admin will review shortly.");
+            } catch (err) {
+                toast.error(err?.data?.message || "Failed to request access.");
+            }
         }
     };
 
@@ -138,8 +144,9 @@ const CourseDetail = ({ params }) => {
         );
     }
 
-    const { course, accessType } = data;
-    const isEnrolled = !!user && accessType === "enrolled";
+    const { course } = data;
+    const isEnrolled = accessData?.status === "active";
+    const isPending = accessData?.status === "pending";
 
 
     return (
@@ -237,20 +244,31 @@ const CourseDetail = ({ params }) => {
                                         <PlayCircle className="group-hover:rotate-12 transition-transform" />
                                         Continue Learning
                                     </button>
+                                ) : isPending ? (
+                                    <button
+                                        disabled
+                                        className="inline-flex items-center justify-center gap-3 px-10 py-4 text-lg font-black text-gray-500 bg-gray-100 rounded-2xl cursor-not-allowed shadow-none"
+                                    >
+                                        <Clock className="animate-pulse" />
+                                        Request Pending
+                                    </button>
                                 ) : (
                                     <button
                                         onClick={handleEnrollNow}
-                                        disabled={isEnrolling}
+                                        disabled={isEnrolling || isRequesting}
                                         className="inline-flex items-center justify-center gap-3 px-10 py-4 text-lg font-black text-white bg-[#DC5178] rounded-2xl hover:bg-[#c4456a] transition-all transform hover:scale-[1.02] shadow-xl shadow-[#DC5178]/30 group disabled:opacity-70 disabled:scale-100"
                                     >
-                                        {isEnrolling ? (
+                                        {(isEnrolling || isRequesting) ? (
                                             <>
                                                 <Loader2 className="animate-spin" />
-                                                Enrolling...
+                                                Processing...
                                             </>
                                         ) : (
                                             <>
-                                                Enroll Now {course.course_price > 0 ? `₹${course.course_price}` : "for Free"}
+                                                {course.course_type === 'free' ? "Enroll Now Free" : "Request Access"}
+                                                <span className="text-sm font-normal opacity-80 block sm:hidden md:block ml-1">
+                                                    {course.course_price > 0 && `(₹${course.course_price})`}
+                                                </span>
                                                 <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
                                             </>
                                         )}

@@ -1,38 +1,70 @@
 "use client";
 import React, { useState } from 'react';
-import { useGetAllEnrollmentsQuery, useRevokeCourseAccessMutation } from '@/feature/api/enrollmentApi';
-import { PageHeader, Card, LoadingState, ErrorState, Badge, typography } from '../components/AdminUI';
-import { Users, GraduationCap, Calendar, Trash2, Search, Filter, Mail, BookOpen, Clock, ShieldCheck, ShieldAlert, Phone } from 'lucide-react';
+import { useGetAllEnrollmentsQuery, useRevokeCourseAccessMutation, useActivateEnrollmentMutation } from '@/feature/api/enrollmentApi';
+import { PageHeader, Card, LoadingState, ErrorState, Badge, typography, Modal, Button } from '../components/AdminUI';
+import { Users, GraduationCap, Calendar, Trash2, Search, Filter, Mail, BookOpen, Clock, ShieldCheck, ShieldAlert, Phone, AlertCircle, ShieldX } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { toast } from 'sonner';
 
 
 const AdminEnrollments = () => {
     const [searchTerm, setSearchTerm] = useState("");
+    const [isRevokeModalOpen, setIsRevokeModalOpen] = useState(false);
+    const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
+    const [selectedEnrollment, setSelectedEnrollment] = useState(null);
+
     const { data, isLoading, error, refetch } = useGetAllEnrollmentsQuery();
     const [revokeAccess, { isLoading: isRevoking }] = useRevokeCourseAccessMutation();
+    const [activateAccess, { isLoading: isActivating }] = useActivateEnrollmentMutation();
 
     if (isLoading) return <LoadingState message="Fetching enrollment records..." />;
     if (error) return <ErrorState message="Failed to load enrollments" onRetry={refetch} />;
 
     const enrollments = data?.enrollments || [];
 
-    const handleRevoke = async (id, studentName) => {
-        if (window.confirm(`Are you sure you want to revoke access for ${studentName}?`)) {
-            try {
-                await revokeAccess(id).unwrap();
-                toast.success(`Access revoked for ${studentName}`);
-                refetch();
-            } catch (err) {
-                toast.error(err?.data?.message || "Failed to revoke access");
-            }
+    const handleRevoke = async () => {
+        if (!selectedEnrollment) return;
+
+        try {
+            await revokeAccess(selectedEnrollment.id).unwrap();
+            toast.success(`Access revoked for ${selectedEnrollment.studentName}`);
+            setIsRevokeModalOpen(false);
+            setSelectedEnrollment(null);
+            refetch();
+        } catch (err) {
+            toast.error(err?.data?.message || "Failed to revoke access");
         }
+    };
+
+    const handleActivate = async () => {
+        if (!selectedEnrollment) return;
+
+        try {
+            await activateAccess(selectedEnrollment.id).unwrap();
+            toast.success(`Access activated for ${selectedEnrollment.studentName}`);
+            setIsActivateModalOpen(false);
+            setSelectedEnrollment(null);
+            refetch();
+        } catch (err) {
+            toast.error(err?.data?.message || "Failed to activate access");
+        }
+    };
+
+    const openRevokeModal = (id, studentName, courseTitle) => {
+        setSelectedEnrollment({ id, studentName, courseTitle });
+        setIsRevokeModalOpen(true);
+    };
+
+    const openActivateModal = (id, studentName, courseTitle) => {
+        setSelectedEnrollment({ id, studentName, courseTitle });
+        setIsActivateModalOpen(true);
     };
 
     const filteredEnrollments = enrollments.filter(e => {
         const search = searchTerm.toLowerCase().trim();
         if (!search) return true;
-        
+
         return (
             e.student?.name?.toLowerCase().includes(search) ||
             e.student?.email?.toLowerCase().includes(search) ||
@@ -106,6 +138,13 @@ const AdminEnrollments = () => {
                         <Filter size={16} />
                         Filter
                     </button>
+                    <Link
+                        href="/admin/enrollments/requests"
+                        className="flex items-center gap-2 px-4 py-2 bg-[#DC5178] text-white rounded-xl text-sm font-bold border border-[#DC5178] hover:bg-[#c4456a] transition-all shadow-lg shadow-[#DC5178]/20"
+                    >
+                        <Clock size={16} />
+                        View Requests
+                    </Link>
                     <button
                         onClick={() => refetch()}
                         className="flex items-center gap-2 px-4 py-2 bg-pink-50 text-[#DC5178] rounded-xl text-sm font-bold border border-pink-100 hover:bg-pink-100 transition-all"
@@ -197,16 +236,20 @@ const AdminEnrollments = () => {
                                             <div className="flex items-center justify-center">
                                                 {enr.is_active ? (
                                                     <button
-                                                        onClick={() => handleRevoke(enr.id, enr.student?.name)}
+                                                        onClick={() => openRevokeModal(enr.id, enr.student?.name, enr.course?.course_title)}
                                                         className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                                                         title="Revoke Access"
                                                     >
                                                         <ShieldAlert size={18} />
                                                     </button>
                                                 ) : (
-                                                    <div className="p-2 text-gray-300">
+                                                    <button
+                                                        onClick={() => openActivateModal(enr.id, enr.student?.name, enr.course?.course_title)}
+                                                        className="p-2 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-all"
+                                                        title="Activate Access"
+                                                    >
                                                         <ShieldCheck size={18} />
-                                                    </div>
+                                                    </button>
                                                 )}
                                             </div>
                                         </td>
@@ -217,6 +260,94 @@ const AdminEnrollments = () => {
                     </table>
                 </div>
             </Card>
+
+            {/* Revoke Confirmation Modal */}
+            <Modal
+                isOpen={isRevokeModalOpen}
+                onClose={() => setIsRevokeModalOpen(false)}
+                title="Revoke Course Access"
+                icon={ShieldX}
+                iconBg="bg-red-50"
+                iconColor="text-red-500"
+                footer={
+                    <>
+                        <Button
+                            variant="secondary"
+                            onClick={() => setIsRevokeModalOpen(false)}
+                            disabled={isRevoking}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="danger"
+                            onClick={handleRevoke}
+                            loading={isRevoking}
+                        >
+                            Yes, Revoke Access
+                        </Button>
+                    </>
+                }
+            >
+                <div className="space-y-4">
+                    <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-100 dark:border-red-900/20">
+                        <AlertCircle className="text-red-500 shrink-0 mt-0.5" size={18} />
+                        <div className="text-sm">
+                            <p className="text-gray-900 dark:text-white font-bold mb-1">Confirm Action</p>
+                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                                Are you sure you want to revoke access for <span className="text-red-600 font-black">{selectedEnrollment?.studentName}</span> from the course: <br />
+                                <span className="text-gray-900 dark:text-white font-bold">&quot;{selectedEnrollment?.courseTitle}&quot;</span>
+                            </p>
+                        </div>
+                    </div>
+                    <p className="text-[12px] text-gray-400 font-medium px-1 italic text-center">
+                        The student will no longer be able to access course content until access is re-granted.
+                    </p>
+                </div>
+            </Modal>
+
+            {/* Activate Confirmation Modal */}
+            <Modal
+                isOpen={isActivateModalOpen}
+                onClose={() => setIsActivateModalOpen(false)}
+                title="Activate Course Access"
+                icon={ShieldCheck}
+                iconBg="bg-emerald-50"
+                iconColor="text-emerald-500"
+                footer={
+                    <>
+                        <Button
+                            variant="secondary"
+                            onClick={() => setIsActivateModalOpen(false)}
+                            disabled={isActivating}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="success"
+                            onClick={handleActivate}
+                            loading={isActivating}
+                        >
+                            Yes, Activate Access
+                        </Button>
+                    </>
+                }
+            >
+                <div className="space-y-4">
+                    <div className="flex items-start gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl border border-emerald-100 dark:border-emerald-900/20">
+                        <ShieldCheck className="text-emerald-500 shrink-0 mt-0.5" size={18} />
+                        <div className="text-sm">
+                            <p className="text-gray-900 dark:text-white font-bold mb-1">Confirm Activation</p>
+                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                                You are about to re-grant course access to <span className="text-emerald-600 font-black">{selectedEnrollment?.studentName}</span> for: <br />
+                                <span className="text-gray-900 dark:text-white font-bold">&quot;{selectedEnrollment?.courseTitle}&quot;</span>
+                            </p>
+                        </div>
+                    </div>
+                    <p className="text-[12px] text-gray-400 font-medium px-1 italic text-center">
+                        The student will immediately regain access to all course content and materials.
+                    </p>
+                </div>
+            </Modal>
         </div>
     );
 };

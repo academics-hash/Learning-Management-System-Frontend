@@ -114,6 +114,22 @@ export const authApi = createApi({
                 method: "POST",
                 body: inputData,
             }),
+            async onQueryStarted(_, { queryFulfilled, dispatch }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data?.user) {
+                        dispatch(userLoggedIn({ user: data.user }));
+                    }
+                } catch (error) {
+                    // Refined error logging for RTK Query
+                    const errorMessage = error?.error?.data?.message || error?.data?.message || "Verification failed";
+                    console.error("Verification failed Details:", {
+                        status: error?.error?.status || error?.status,
+                        data: error?.error?.data || error?.data,
+                        message: errorMessage
+                    });
+                }
+            },
         }),
 
         // Send Reset OTP
