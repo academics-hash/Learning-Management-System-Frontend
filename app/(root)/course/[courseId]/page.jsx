@@ -8,6 +8,7 @@ import {
     Clock,
     Users,
     PlayCircle,
+    Play,
     Lock,
     ChevronRight,
     Calendar,
@@ -150,12 +151,12 @@ const CourseDetail = ({ params }) => {
 
 
     return (
-        <div ref={container} className="min-h-screen mt-8 rounded-[24px] bg-[#fafafa] selection:bg-[#DC5178]/20 selection:text-[#DC5178] overflow-hidden border border-gray-100 shadow-2xl">
+        <div ref={container} className="min-h-screen mt-8 rounded-[16px] bg-[#fafafa] selection:bg-[#DC5178]/20 selection:text-[#DC5178] overflow-hidden border border-gray-100 shadow-2xl">
             {/* Nav Back Header */}
-            <div className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 rounded-t-[24px]">
-                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <Link href="/courses" className="flex items-center gap-2 text-gray-600 hover:text-[#DC5178] transition-colors font-medium">
-                        <ArrowLeft size={18} />
+            <div className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 rounded-t-[16px]">
+                <div className="w-full px-6 h-16 flex items-center justify-between">
+                    <Link href="/courses" className="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-gray-200/60 text-gray-600 font-medium hover:border-[#DC5178]/30 hover:text-[#DC5178] hover:shadow-lg hover:shadow-[#DC5178]/5 hover:-translate-y-0.5 transition-all duration-300">
+                        <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform duration-300" />
                         <span>Back to Courses</span>
                     </Link>
                     <div className="flex items-center gap-4">
@@ -326,8 +327,9 @@ const CourseDetail = ({ params }) => {
                                                 }}
                                                 className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-all duration-500 cursor-pointer"
                                             >
-                                                <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
-                                                    <PlayCircle className="w-10 h-10 text-white fill-white" />
+                                                <div className="w-24 h-24 bg-[#DC5178] rounded-full flex items-center justify-center shadow-2xl shadow-[#DC5178]/50 group-hover:scale-110 transition-transform z-10 relative">
+                                                    <div className="absolute inset-0 bg-[#DC5178] rounded-full animate-ping opacity-20 duration-1000"></div>
+                                                    <Play className="w-10 h-10 text-white fill-white relative z-10 ml-1" />
                                                 </div>
                                             </div>
                                         </>

@@ -2,8 +2,8 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useGetCreatorCoursesQuery } from '@/feature/api/courseApi';
-import { Plus, Search, Edit, Video, BookOpen, Users, Eye, MoreVertical } from 'lucide-react';
+import { useGetCreatorCoursesQuery, useDeleteCourseMutation } from '@/feature/api/courseApi';
+import { Plus, Search, Edit, Video, BookOpen, Users, Eye, MoreVertical, Trash } from 'lucide-react';
 import {
     PageHeader,
     Card,
@@ -19,11 +19,33 @@ import {
     TableCell,
     TableHeader,
     IconButton,
+    Modal,
 } from "@/app/(admin)/admin/components/AdminUI";
 
 const CoursesPage = () => {
     const { data, isLoading, isError, refetch } = useGetCreatorCoursesQuery();
+    const [deleteCourse, { isLoading: isDeleting }] = useDeleteCourseMutation();
     const courses = data?.courses || [];
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+    const [courseToDelete, setCourseToDelete] = React.useState(null);
+
+    const handleDeleteClick = (courseId) => {
+        setCourseToDelete(courseId);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (courseToDelete) {
+            try {
+                await deleteCourse(courseToDelete).unwrap();
+                setIsDeleteModalOpen(false);
+                setCourseToDelete(null);
+            } catch (error) {
+                console.error("Failed to delete course", error);
+                alert("Failed to delete course");
+            }
+        }
+    };
 
     if (isLoading) return <LoadingState message="Loading courses..." />;
     if (isError) return <ErrorState message="Failed to load courses" onRetry={refetch} />;
@@ -127,6 +149,12 @@ const CoursesPage = () => {
                                                     title="Edit Course"
                                                 />
                                             </Link>
+                                            <IconButton
+                                                icon={Trash}
+                                                variant="danger"
+                                                title="Delete Course"
+                                                onClick={() => handleDeleteClick(course.id)}
+                                            />
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -172,6 +200,28 @@ const CoursesPage = () => {
                     </Card>
                 </div>
             )}
+
+            {/* Delete Confirmation Modal */}
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                title="Danger Zone"
+                icon={Trash}
+                iconColor="text-red-600"
+                iconBg="bg-red-50"
+                footer={
+                    <>
+                        <Button variant="ghost" onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
+                        <Button variant="danger" onClick={confirmDelete} loading={isDeleting}>Delete Course</Button>
+                    </>
+                }
+            >
+                <div className="text-center md:text-left">
+                    <p className="text-gray-600 dark:text-gray-300 font-jost text-sm leading-relaxed">
+                        Once deleted, a course and all its associated data cannot be recovered.
+                    </p>
+                </div>
+            </Modal>
         </div>
     );
 };

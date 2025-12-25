@@ -195,7 +195,7 @@ const LecturePlayer = ({ params }) => {
     }, {});
 
     return (
-        <div className="flex min-h-[calc(100vh-100px)] mt-8 mb-12 bg-white rounded-[24px] border border-gray-100 shadow-2xl relative overflow-hidden">
+        <div className="flex min-h-[calc(100vh-100px)] mt-8 mb-12 bg-white rounded-2xl border border-gray-100 shadow-2xl relative overflow-hidden">
 
             {/* Main Content Area (Player) */}
             <div className="flex-1 flex flex-col relative min-w-0">

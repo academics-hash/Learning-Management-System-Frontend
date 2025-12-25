@@ -11,14 +11,17 @@ const CourseSelection = () => {
     const { user } = useSelector((state) => state.auth);
     const { data: enrolledData } = useGetMyEnrolledCoursesQuery(undefined, { skip: !user });
 
-    // Create a set of enrolled course IDs for quick lookup
-    const enrolledCourseIds = useMemo(() => {
-        const ids = new Set();
+    // Create a map of enrolled course IDs with their progress
+    const enrolledCoursesMap = useMemo(() => {
+        const map = new Map();
         if (enrolledData?.courses) {
-            enrolledData.courses.forEach(course => ids.add(course.id));
+            enrolledData.courses.forEach(course => {
+                map.set(course.id, course.progress || 0);
+            });
         }
-        return ids;
+        return map;
     }, [enrolledData]);
+
 
     if (isLoading) return <div>Loading...</div>; // Or a nice skeleton
     if (error) return <div>Error loading courses</div>;
@@ -48,13 +51,14 @@ const CourseSelection = () => {
                 {/* Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
                     {courses.map(course => {
-                        const isEnrolled = enrolledCourseIds.has(course.id);
+                        const isEnrolled = enrolledCoursesMap.has(course.id);
+                        const progress = isEnrolled ? enrolledCoursesMap.get(course.id) : 0;
                         return (
                             <CourseCard
                                 key={course.id}
                                 course={course}
                                 showProgress={isEnrolled}
-                                progress={0}
+                                progress={progress}
                             />
                         );
                     })}

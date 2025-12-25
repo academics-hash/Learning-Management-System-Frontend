@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Save, Upload, Trash2, Image as ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { useGetCourseByIdQuery, useEditCourseMutation, useTogglePublishCourseMutation } from '@/feature/api/courseApi';
+import { useGetCourseByIdQuery, useEditCourseMutation, useTogglePublishCourseMutation, useDeleteCourseMutation } from '@/feature/api/courseApi';
 import {
     PageHeader,
     Card,
@@ -14,46 +14,29 @@ import {
     Textarea,
     Toggle,
     LoadingState,
-    Divider,
-    typography
+    typography,
+    Modal
 } from "@/app/(admin)/admin/components/AdminUI";
 
-const EditCoursePage = () => {
-    const { courseId } = useParams();
+const CourseEditForm = ({ course, courseId, refetch }) => {
     const router = useRouter();
-
-    const { data, isLoading: isFetching, refetch } = useGetCourseByIdQuery(courseId);
     const [editCourse, { isLoading: isUpdating }] = useEditCourseMutation();
-    const [togglePublish, { isLoading: isToggling }] = useTogglePublishCourseMutation();
+    const [togglePublish] = useTogglePublishCourseMutation();
+    const [deleteCourse, { isLoading: isDeleting }] = useDeleteCourseMutation();
+
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const [form, setForm] = useState({
-        course_title: "",
-        sub_title: "",
-        description: "",
-        category: "",
-        course_level: "Beginner",
-        course_price: "",
-        course_type: "",
+        course_title: course.course_title || "",
+        sub_title: course.sub_title || "",
+        description: course.description || "",
+        category: course.category || "",
+        course_level: course.course_level || "Beginner",
+        course_price: course.course_price || "",
+        course_type: course.course_type || "paid",
     });
-    const [previewThumbnail, setPreviewThumbnail] = useState("");
+    const [previewThumbnail, setPreviewThumbnail] = useState(course.course_thumbnail || "");
     const [thumbnailFile, setThumbnailFile] = useState(null);
-
-    // Populate form when data loads
-    useEffect(() => {
-        if (data?.course) {
-            const c = data.course;
-            setForm({
-                course_title: c.course_title || "",
-                sub_title: c.sub_title || "",
-                description: c.description || "",
-                category: c.category || "",
-                course_level: c.course_level || "Beginner",
-                course_price: c.course_price || "",
-                course_type: c.course_type || "paid",
-            });
-            setPreviewThumbnail(c.course_thumbnail || "");
-        }
-    }, [data]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -109,7 +92,7 @@ const EditCoursePage = () => {
 
     const handlePublishToggle = async () => {
         try {
-            const isPublished = data?.course?.is_published;
+            const isPublished = course?.is_published;
             await togglePublish({ courseId, publish: !isPublished }).unwrap();
             toast.success(isPublished ? "Course Unpublished" : "Course Published successfully");
             refetch();
@@ -118,7 +101,16 @@ const EditCoursePage = () => {
         }
     };
 
-    if (isFetching) return <LoadingState message="Fetching course details..." />;
+    const handleDelete = async () => {
+        try {
+            await deleteCourse(courseId).unwrap();
+            toast.success("Course deleted successfully");
+            router.push('/admin/courses');
+        } catch (error) {
+            console.error("Delete failed", error);
+            toast.error("Failed to delete course");
+        }
+    };
 
     return (
         <div className="max-w-5xl mx-auto space-y-8 pb-12">
@@ -139,12 +131,12 @@ const EditCoursePage = () => {
                     <Card padding="px-4 py-2" className="flex items-center gap-4 bg-white/50 border-gray-100">
                         <div className="space-y-0.5">
                             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-none">Status</p>
-                            <p className={`text-xs font-bold font-lexend ${data?.course?.is_published ? "text-emerald-600" : "text-amber-500"}`}>
-                                {data?.course?.is_published ? "PUBLISHED" : "DRAFT"}
+                            <p className={`text-xs font-bold font-lexend ${course?.is_published ? "text-emerald-600" : "text-amber-500"}`}>
+                                {course?.is_published ? "PUBLISHED" : "DRAFT"}
                             </p>
                         </div>
                         <Toggle
-                            checked={data?.course?.is_published}
+                            checked={course?.is_published}
                             onChange={handlePublishToggle}
                         />
                     </Card>
@@ -301,14 +293,62 @@ const EditCoursePage = () => {
                             <p className="text-xs text-red-700/70 font-medium font-jost leading-relaxed">
                                 Once deleted, a course and all its associated data cannot be recovered.
                             </p>
-                            <Button variant="danger" size="sm" className="w-full bg-red-100 border-red-200 text-red-600 hover:bg-red-200 shadow-none">
+                            <Button
+                                type="button"
+                                variant="danger"
+                                size="sm"
+                                className="w-full bg-red-100 border-red-200 text-red-600 hover:bg-red-200 shadow-none"
+                                onClick={() => setIsDeleteModalOpen(true)}
+                            >
                                 Delete Course
                             </Button>
                         </div>
                     </div>
                 </div>
             </form>
+
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                title="Danger Zone"
+                icon={Trash2}
+                iconColor="text-red-600"
+                iconBg="bg-red-50"
+                footer={
+                    <>
+                        <Button variant="ghost" onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
+                        <Button variant="danger" onClick={handleDelete} loading={isDeleting}>Delete Course</Button>
+                    </>
+                }
+            >
+                <div>
+                    <p className="text-gray-600 dark:text-gray-300 font-jost text-sm leading-relaxed">
+                        Once deleted, a course and all its associated data cannot be recovered.
+                    </p>
+                </div>
+            </Modal>
         </div>
+    );
+};
+
+const EditCoursePage = () => {
+    const { courseId } = useParams();
+    // Using isLoading ensures we only block for initial load, not background refetches
+    const { data, isLoading, refetch } = useGetCourseByIdQuery(courseId);
+
+    if (isLoading) return <LoadingState message="Fetching course details..." />;
+
+    if (!data?.course) {
+        return <LoadingState message="Course not found or loading failed." />;
+    }
+
+    return (
+        <CourseEditForm
+            course={data.course}
+            courseId={courseId}
+            refetch={refetch}
+            key={courseId}
+        />
     );
 };
 

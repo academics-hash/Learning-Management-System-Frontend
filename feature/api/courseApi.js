@@ -60,7 +60,17 @@ export const courseApi = createApi({
             invalidatesTags: (result, error, { courseId }) => [
                 { type: "Course", id: courseId },
                 "CreatorCourse",
+                "Course"
             ],
+        }),
+
+        // Delete Course
+        deleteCourse: builder.mutation({
+            query: (courseId) => ({
+                url: `${courseId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Course", "CreatorCourse"],
         }),
 
         // Public: Get all published courses
@@ -69,6 +79,7 @@ export const courseApi = createApi({
                 url: "published-course",
                 method: "GET",
             }),
+            providesTags: ["Course"],
         }),
 
         // Search courses
@@ -122,6 +133,7 @@ export const {
     useEditCourseMutation,
     useGetCourseByIdQuery,
     useTogglePublishCourseMutation,
+    useDeleteCourseMutation,
     useGetPublishedCoursesQuery,
     useSearchCoursesQuery,
     useGetFreeCoursesQuery,
