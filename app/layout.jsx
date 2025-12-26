@@ -4,6 +4,7 @@ import StoreProvider from "./StoreProvider";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import SmoothScroller from "@/components/SmoothScroller";
+import ErrorHandler from "@/components/ErrorHandler";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -38,9 +39,11 @@ export default function RootLayout({ children }) {
       >
         <StoreProvider>
           <ThemeProvider attribute="class">
-            <SmoothScroller />
-            {children}
-            <Toaster />
+            <ErrorHandler>
+              <SmoothScroller />
+              {children}
+              <Toaster />
+            </ErrorHandler>
           </ThemeProvider>
         </StoreProvider>
       </body>
