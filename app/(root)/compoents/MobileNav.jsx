@@ -68,6 +68,14 @@ const MobileNav = () => {
                     >
                         Courses
                     </Link>
+                    <Link
+                        href="/articles"
+                        onClick={() => setIsOpen(false)}
+                        className="text-white text-lg font-medium hover:text-[#DC5178] transition-colors"
+                        style={{ fontFamily: 'Switzer, sans-serif' }}
+                    >
+                        Articles
+                    </Link> 
 
                     {mounted && !loading && (
                         isAuthenticated ? (

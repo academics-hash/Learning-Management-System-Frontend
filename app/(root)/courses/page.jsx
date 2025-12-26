@@ -489,7 +489,7 @@ const CoursesPage = () => {
                         )}
 
                         {/* Pagination */}
-                        {totalPages > 1 && (
+                        {totalPages >= 1 && (
                             <div className="flex justify-center items-center gap-1.5 mt-14">
                                 <button
                                     onClick={handlePrevPage}

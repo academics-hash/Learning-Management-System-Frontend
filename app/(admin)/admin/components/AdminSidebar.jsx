@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, BookOpen, Video, Users, Settings, Sun, Moon, MessageSquare, ChevronLeft, ChevronRight, Menu, Shield, Briefcase, GraduationCap, Clock } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Video, Users, Settings, Sun, Moon, MessageSquare, ChevronLeft, ChevronRight, Menu, Shield, Briefcase, GraduationCap, Clock, FileText } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { useState, useEffect } from 'react';
 import { useLogoutUserMutation } from '@/feature/api/authApi';
@@ -65,6 +65,7 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
         { name: "Enrollments", href: "/admin/enrollments", icon: GraduationCap },
         { name: "Course Requests", href: "/admin/enrollments/requests", icon: Clock },
         { name: "Placements", href: "/admin/placements", icon: Briefcase },
+        { name: "Articles", href: "/admin/articles", icon: FileText },
         { name: "Settings", href: "/admin/settings", icon: Settings },
 
     ];
@@ -78,13 +79,15 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
             <div className={`h-16 flex items-center border-b border-gray-50 dark:border-gray-800 px-4 justify-between bg-white dark:bg-gray-900 sticky top-0 z-10`}>
                 {!isCollapsed && (
                     <div className="flex items-center px-2">
-                        <Image
-                            src="/image/logo.png"
-                            alt="Stackup Logo"
-                            width={100}
-                            height={28}
+                        <Link href="/">
+                            <Image
+                                src="/image/logo.png"
+                                alt="Stackup Logo"
+                                width={100}
+                                height={28}
                             className="object-contain transition-all"
                         />
+                        </Link>
                     </div>
                 )}
                 <button

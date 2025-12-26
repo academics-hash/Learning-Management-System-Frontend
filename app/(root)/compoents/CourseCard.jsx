@@ -10,13 +10,21 @@ const CourseCard = ({ course, showProgress = false, progress = 0 }) => {
             <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-2xl hover:shadow-[#DC5178]/10 transition-all duration-500 hover:-translate-y-1">
                 {/* Thumbnail */}
                 <div className="relative w-full aspect-video bg-[#1a1a2e] overflow-hidden rounded-t-2xl">
-                    <Image
-                        src={course.course_thumbnail || "/image/placeholder.png"}
-                        alt={course.course_title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                    {course.course_thumbnail ? (
+                        <Image
+                            src={course.course_thumbnail}
+                            alt={course.course_title}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#DC5178]/20 to-purple-600/20 flex items-center justify-center">
+                            <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center">
+                                <span className="text-2xl font-bold text-white/60">{course.course_title?.charAt(0) || 'C'}</span>
+                            </div>
+                        </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
                         <span className="text-white text-xs font-medium backdrop-blur-md bg-white/20 px-3 py-1.5 rounded-full">
                             {showProgress ? "Continue Learning" : "View Course Details"}
                         </span>

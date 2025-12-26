@@ -33,8 +33,8 @@ const Footer = () => {
                         <div>
                             <h3 className="text-white text-lg font-semibold mb-6 tracking-wide font-lexend">GET HELP</h3>
                             <ul className="space-y-4">
-                                <li><Link href="/contact" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Contact Us</Link></li>
-                                <li><Link href="/articles" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Latest Articles</Link></li>
+                                <li><Link href="/about" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Contact Us</Link></li>
+                                <li><Link href="/articles" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">Blog</Link></li>
                                 <li><Link href="/faq" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">FAQ</Link></li>
                             </ul>
                         </div>

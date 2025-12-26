@@ -9,6 +9,7 @@ import { superadminApi } from "../feature/api/superadminApi";
 import { placementApi } from "../feature/api/placementApi";
 import { courseProgressApi } from "../feature/api/courseprogressApi";
 import { enrollmentApi } from "../feature/api/enrollmentApi";
+import { articleApi } from "../feature/api/articleApi";
 
 
 
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
     [placementApi.reducerPath]: placementApi.reducer,
     [courseProgressApi.reducerPath]: courseProgressApi.reducer,
     [enrollmentApi.reducerPath]: enrollmentApi.reducer,
+    [articleApi.reducerPath]: articleApi.reducer,
 
 
     auth: authReducer,

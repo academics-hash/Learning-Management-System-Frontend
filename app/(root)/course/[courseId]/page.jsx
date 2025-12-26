@@ -311,12 +311,20 @@ const CourseDetail = ({ params }) => {
                                         </div>
                                     ) : (
                                         <>
-                                            <Image
-                                                src={course.course_thumbnail || "/image/placeholder.png"}
-                                                alt={course.course_title}
-                                                fill
-                                                className="object-cover group-hover:scale-105 transition-transform duration-700"
-                                            />
+                                            {course.course_thumbnail ? (
+                                                <Image
+                                                    src={course.course_thumbnail}
+                                                    alt={course.course_title}
+                                                    fill
+                                                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                                />
+                                            ) : (
+                                                <div className="absolute inset-0 bg-gradient-to-br from-[#DC5178]/20 to-purple-600/20 flex items-center justify-center">
+                                                    <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center">
+                                                        <span className="text-4xl font-bold text-white/40">{course.course_title?.charAt(0) || 'C'}</span>
+                                                    </div>
+                                                </div>
+                                            )}
                                             <div
                                                 onClick={() => {
                                                     if (course.lectures?.[0]?.videoUrl) {

@@ -85,6 +85,9 @@ const Navbar = () => {
                 <Link href="/courses" className="text-white/90 hover:text-white text-[16px] font-normal leading-[100%] tracking-[0%] transition-colors" style={{ fontFamily: 'Switzer, sans-serif' }}>
                     Courses
                 </Link>
+                 <Link href="/articles" className="text-white/90 hover:text-white text-[16px] font-normal leading-[100%] tracking-[0%] transition-colors" style={{ fontFamily: 'Switzer, sans-serif' }}>
+                    Articles
+                </Link>
             </div>
 
             {/* Desktop Connect Button or Avatar Dropdown */}
