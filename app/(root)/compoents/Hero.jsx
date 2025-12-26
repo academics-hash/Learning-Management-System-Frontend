@@ -122,7 +122,7 @@ const Hero = () => {
 
                         {/* Left Column: 2 images stacked */}
                         <div className="flex flex-col gap-4 pt-8 -mt-12">
-                            <div className="relative h-[250px] md:h-[320px] w-full">
+                            <div className="relative h-[250px] md:h-[320px] w-full" data-effect="cinematic-reveal">
                                 <Image
                                     src="/image/hero-1.png"
                                     alt="Group Learning"
@@ -130,7 +130,7 @@ const Hero = () => {
                                     className="object-cover rounded-3xl hover:scale-[1.02] transition-transform duration-500"
                                 />
                             </div>
-                            <div className="relative h-[250px] md:h-[320px] w-full">
+                            <div className="relative h-[250px] md:h-[320px] w-full" data-effect="cinematic-reveal">
                                 <Image
                                     src="/image/hero-2.png"
                                     alt="Student Focus"
@@ -142,7 +142,7 @@ const Hero = () => {
 
                         {/* Right Column: Starts higher, with gap between images */}
                         <div className="flex flex-col gap-4 -mt-20">
-                            <div className="relative h-[250px] md:h-[320px] w-full">
+                            <div className="relative h-[250px] md:h-[320px] w-full" data-effect="cinematic-reveal">
                                 <Image
                                     src="/image/hero-2.png"
                                     alt="Coding Success"
@@ -151,7 +151,7 @@ const Hero = () => {
                                 />
                             </div>
                             {/* Extra gap to push last image down more */}
-                            <div className="relative h-[250px] md:h-[320px] w-full mt-1">
+                            <div className="relative h-[250px] md:h-[320px] w-full mt-1" data-effect="cinematic-reveal">
                                 <Image
                                     src="/image/hero-3.png"
                                     alt="Collaboration"

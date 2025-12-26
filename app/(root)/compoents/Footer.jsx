@@ -42,7 +42,7 @@ const Footer = () => {
                         {/* Programs Column */}
                         <div>
                             <Link href="/programs">
-                            <h3 className="text-white text-lg font-semibold mb-6 tracking-wide font-lexend">PROGRAMS</h3>
+                                <h3 className="text-white text-lg font-semibold mb-6 tracking-wide font-lexend">PROGRAMS</h3>
                             </Link>
                             <ul className="space-y-4">
                                 <li><Link href="/programs/mern-stack" className="text-gray-300 hover:text-primary-pink transition-colors text-sm">MERN Stack</Link></li>
@@ -89,7 +89,7 @@ const Footer = () => {
                                     <Link href="https://www.instagram.com/stackuplearning/?hl=en" target="_blank" rel="noopener noreferrer">
                                         <FaInstagram className="w-5 h-5 text-white hover:text-gray-300 transition-colors" />
                                     </Link>
-                                    <Link href="https://wa.me" target="_blank" rel="noopener noreferrer">
+                                    <Link href="https://wa.me/916238872311?text=Hi" target="_blank" rel="noopener noreferrer">
                                         <FaWhatsapp className="w-5 h-5 text-white hover:text-gray-300 transition-colors" />
                                     </Link>
                                 </div>
