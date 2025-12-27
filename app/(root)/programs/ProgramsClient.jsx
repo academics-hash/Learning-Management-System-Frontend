@@ -33,26 +33,42 @@ const icons = {
 
 export default function ProgramsClient({ programsData }) {
     const containerRef = useRef(null);
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useGSAP(() => {
+        if (!mounted) return;
+
         const tl = gsap.timeline();
-        tl.from(".page-title", {
-            opacity: 0,
-            y: 40,
-            duration: 1,
-            ease: "power3.out"
-        })
-            .from(".program-card", {
-                opacity: 0,
-                y: 30,
-                stagger: 0.1,
-                duration: 0.8,
-                ease: "power2.out"
-            }, "-=0.5");
-    }, { scope: containerRef });
+        tl.fromTo(".page-title",
+            { opacity: 0, y: 40 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "power3.out"
+            }
+        )
+            .fromTo(".program-card",
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    stagger: 0.1,
+                    duration: 0.8,
+                    ease: "power2.out"
+                },
+                "-=0.5"
+            );
+    }, { scope: containerRef, dependencies: [mounted] });
+
+    if (!mounted) return null;
 
     return (
-        <div ref={containerRef} className="min-h-screen bg-black text-white font-jost pb-32">
+        <div ref={containerRef} className="min-h-screen bg-black/80 backdrop-blur-sm text-white font-jost pb-32 mt-8 rounded-2xl border border-white/10">
             {/* Background Effects */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-pink-500/10 rounded-full blur-[120px]" />

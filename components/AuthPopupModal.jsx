@@ -78,8 +78,13 @@ const AuthPopupModal = () => {
                 setFormData({ name: '', email: '', phone: '', password: '' }); // Reset form
             }
         } catch (error) {
-            console.error("Auth Failure:", error);
-            const errorMsg = error?.data?.message || "Something went wrong";
+            console.error("Auth Failure:", {
+                status: error?.status,
+                data: error?.data,
+                message: error?.message,
+                original: error
+            });
+            const errorMsg = error?.data?.message || error?.error || "Something went wrong";
             toast.error(errorMsg);
         }
     };

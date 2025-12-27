@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, MessageSquare, Users, ChevronLeft, Sun, Moon, Menu } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Users, ChevronLeft, Sun, Moon, Menu, Mail } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { useState, useEffect } from 'react';
 import { useLogoutUserMutation } from '@/feature/api/authApi';
@@ -42,6 +42,7 @@ const SalesSidebar = ({ isCollapsed, setIsCollapsed }) => {
         { name: "Dashboard", href: "/sales", icon: LayoutDashboard },
         { name: "Users", href: "/sales/users", icon: Users },
         { name: "Enquiries", href: "/sales/enquiries", icon: MessageSquare },
+        { name: "Contact Details", href: "/sales/contacts", icon: Mail },
     ];
 
     return (

@@ -75,6 +75,12 @@ export default function SmoothScroller() {
         // 1. Initialize Lenis for smooth scrolling with adaptive settings
         const lenis = new Lenis(performanceConfig.lenisSettings);
 
+        // Force scroll to top on route change
+        // This fixes the issue where clicking links (especially in the footer) 
+        // doesn't reset the scroll position
+        window.scrollTo(0, 0);
+        lenis.scrollTo(0, { immediate: true });
+
         // 2. Sync Lenis with GSAP ScrollTrigger
         lenis.on("scroll", ScrollTrigger.update);
 

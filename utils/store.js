@@ -10,6 +10,7 @@ import { placementApi } from "../feature/api/placementApi";
 import { courseProgressApi } from "../feature/api/courseprogressApi";
 import { enrollmentApi } from "../feature/api/enrollmentApi";
 import { articleApi } from "../feature/api/articleApi";
+import { contactUsApi } from "../feature/api/contactusApi";
 
 
 
@@ -26,7 +27,8 @@ export const appStore = configureStore({
             placementApi.middleware,
             courseProgressApi.middleware,
             enrollmentApi.middleware,
-            articleApi.middleware
+            articleApi.middleware,
+            contactUsApi.middleware
 
 
         ),

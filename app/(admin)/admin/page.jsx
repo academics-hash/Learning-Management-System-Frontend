@@ -5,7 +5,7 @@ import { useGetDashboardStatsQuery } from '@/feature/api/statsApi';
 import { useGetEnquiryStatsQuery, useGetEnquiryTrendQuery } from '@/feature/api/enquiryApi';
 import { useGetAllEnrollmentsQuery } from '@/feature/api/enrollmentApi';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { Users, BookOpen, Video, TrendingUp, Clock, ArrowUpRight, ArrowDownRight, Activity, MessageSquare, Target, Shield, GraduationCap } from 'lucide-react';
+import { Users, BookOpen, Video, TrendingUp, Clock, ArrowUpRight, ArrowDownRight, Activity, MessageSquare, Target, Shield, GraduationCap, FileText } from 'lucide-react';
 import { PageHeader, Card, StatCard, LoadingState, ErrorState, Badge, typography } from '@/app/(admin)/admin/components/AdminUI';
 
 const AdminDashboard = () => {
@@ -41,6 +41,7 @@ const AdminDashboard = () => {
     lecture: Video,
     enquiry: MessageSquare,
     placement: Target,
+    article: FileText,
     default: Activity
   };
 
@@ -62,6 +63,7 @@ const AdminDashboard = () => {
     { name: 'Courses', value: stats.totalCourses, color: '#4F46E5' },
     { name: 'Lectures', value: stats.totalLectures, color: '#10B981' },
     { name: 'Placements', value: stats.totalPlacements, color: '#f59e0b' },
+    { name: 'Articles', value: stats.totalArticles || 0, color: '#8b5cf6' },
   ];
 
   // Sales Distribution Data (for Superadmin)
@@ -71,7 +73,7 @@ const AdminDashboard = () => {
     { name: 'Converted', value: enquiryStats.converted, color: '#10B981' },
   ];
 
-  const COLORS = ['#DC5178', '#4F46E5', '#10B981', '#f59e0b'];
+  const COLORS = ['#DC5178', '#4F46E5', '#10B981', '#f59e0b', '#8b5cf6'];
   const SALES_COLORS = ['#f59e0b', '#4F46E5', '#10B981'];
 
   return (
@@ -299,7 +301,7 @@ const AdminDashboard = () => {
             <div>
               <p className="text-gray-500 dark:text-gray-400 text-xs font-bold font-lexend mb-1 uppercase tracking-wider">Total Platform Content</p>
               <p className="text-2xl font-bold text-[#DC5178] font-lexend">
-                {(stats.totalUsers + stats.totalCourses + stats.totalLectures + stats.totalPlacements).toLocaleString()}
+                {(stats.totalUsers + stats.totalCourses + stats.totalLectures + stats.totalPlacements + (stats.totalArticles || 0)).toLocaleString()}
               </p>
             </div>
             <TrendingUp className="w-8 h-8 text-[#DC5178] opacity-50" />

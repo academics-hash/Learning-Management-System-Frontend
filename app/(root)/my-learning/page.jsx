@@ -128,8 +128,13 @@ const MyLearningPage = () => {
                                             <tr key={course.id} className="hover:bg-gray-50/80 transition-colors group">
                                                 <td className="px-8 py-6">
                                                     <div className="flex items-center gap-4">
-                                                        <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-sm">
-                                                            <Image src={course.course_thumbnail} alt={course.course_title} fill className="object-cover" />
+                                                        <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-sm bg-gray-100">
+                                                            <Image
+                                                                src={course.course_thumbnail || '/image/logo.png'}
+                                                                alt={course.course_title || 'Course Thumbnail'}
+                                                                fill
+                                                                className="object-cover"
+                                                            />
                                                         </div>
                                                         <span className="font-bold text-gray-900 font-lexend line-clamp-1">{course.course_title}</span>
                                                     </div>

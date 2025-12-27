@@ -102,7 +102,7 @@ const SalesLayout = ({ children }) => {
 
             {/* Main Content Area */}
             <div className={`
-        flex-1 transition-all duration-300 overflow-y-auto h-screen
+        flex-1 transition-all duration-300 min-h-screen
         mt-16 md:mt-0
         ${isCollapsed ? "md:ml-[80px]" : "md:ml-[250px]"}
         p-4 md:p-8 lg:p-10

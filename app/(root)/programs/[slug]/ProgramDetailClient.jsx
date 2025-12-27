@@ -31,43 +31,67 @@ export default function ProgramDetailClient({ program }) {
     const containerRef = useRef(null);
     const heroRef = useRef(null);
     const sectionsRef = useRef([]);
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useGSAP(() => {
+        if (!mounted) return;
+
+        // Reset any existing animations or styles if needed
+        gsap.set([heroRef.current, ".hero-content > *", ".hero-image"], { clearProps: "all" });
+
         // Hero Animation
         const tl = gsap.timeline();
-        tl.from(heroRef.current, {
-            opacity: 0,
-            y: 50,
-            duration: 1,
-            ease: "power3.out"
-        })
-            .from(".hero-content > *", {
-                opacity: 0,
-                x: -30,
-                stagger: 0.2,
-                duration: 0.8,
-                ease: "power3.out"
-            }, "-=0.5")
-            .from(".hero-image", {
-                opacity: 0,
-                scale: 0.8,
+        tl.fromTo(heroRef.current,
+            { opacity: 0, y: 50 },
+            {
+                opacity: 1,
+                y: 0,
                 duration: 1,
-                ease: "back.out(1.7)"
-            }, "-=1");
+                ease: "power3.out"
+            }
+        )
+            .fromTo(".hero-content > *",
+                { opacity: 0, x: -30 },
+                {
+                    opacity: 1,
+                    x: 0,
+                    stagger: 0.2,
+                    duration: 0.8,
+                    ease: "power3.out"
+                },
+                "-=0.5"
+            )
+            .fromTo(".hero-image",
+                { opacity: 0, scale: 0.8 },
+                {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1,
+                    ease: "back.out(1.7)"
+                },
+                "-=1"
+            );
 
         // Section animations on scroll
         sectionsRef.current.forEach((section) => {
             if (!section) return;
-            gsap.from(section, {
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top 80%",
-                },
-                opacity: 0,
-                y: 30,
-                duration: 0.8,
-                ease: "power2.out"
-            });
+            gsap.fromTo(section,
+                { opacity: 0, y: 30 },
+                {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 80%",
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out"
+                }
+            );
         });
 
         // Floating icons animation
@@ -80,7 +104,9 @@ export default function ProgramDetailClient({ program }) {
             yoyo: true,
             ease: "sine.inOut"
         });
-    }, { scope: containerRef });
+    }, { scope: containerRef, dependencies: [mounted, program] });
+
+    if (!mounted) return null;
 
     const getIcon = (title) => {
         const t = title.toLowerCase();
@@ -96,7 +122,7 @@ export default function ProgramDetailClient({ program }) {
     };
 
     return (
-        <div ref={containerRef} className="min-h-screen bg-black text-white font-jost selection:bg-pink-500/30">
+        <div ref={containerRef} className="min-h-screen bg-black/80 backdrop-blur-sm text-white font-jost selection:bg-pink-500/30 mt-8 rounded-2xl border border-white/10">
             {/* SEO Structured Data */}
             <script
                 type="application/ld+json"
@@ -266,8 +292,6 @@ export default function ProgramDetailClient({ program }) {
                 </div>
             </main>
 
-            {/* Footer space */}
-            <div className="py-20 bg-linear-to-t from-slate-50 to-white" />
         </div>
     );
 }

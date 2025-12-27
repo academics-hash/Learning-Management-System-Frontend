@@ -32,7 +32,12 @@ export const authApi = createApi({
                     const result = await queryFulfilled;
                     dispatch(userLoggedIn({ user: result.data.user }));
                 } catch (error) {
-                    console.error("Login failed:", error);
+                    console.error("Login failed:", {
+                        status: error?.status,
+                        data: error?.data,
+                        message: error?.message,
+                        original: error
+                    });
                 }
             },
         }),
@@ -65,8 +70,17 @@ export const authApi = createApi({
                     dispatch(userLoggedIn({ user: result.data.user }));
                 } catch (error) {
                     // Only log unexpected errors. 401 is expected when not logged in.
-                    if (error?.error?.status !== 401 && error?.status !== 401) {
-                        console.error("Load user failed:", error);
+                    // Standardize status extraction
+                    const status = error?.error?.status || error?.status;
+
+                    // Only log unexpected errors. 401 is expected when not logged in.
+                    if (status !== 401) {
+                        console.error("Load user failed:", {
+                            status,
+                            data: error?.data,
+                            message: error?.message || "Unknown error",
+                            original: error
+                        });
                     }
                     dispatch(userLoggedOut());
                 }
